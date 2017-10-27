@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=1280, user-scalable=no"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script type='text/javascript' src='$WEBAPIS/webapis/webapis.js'></script>
     <meta charset="UTF-8">
     <title>Flix Premiere</title>
 
@@ -12,7 +14,8 @@
             deBugReporter: false,
             language: null,
             country: null,
-            device: "webos",
+            device: "samsung_tizen",
+            year: "2015",
             onHover: "",
             onFocus: "",
             callbackFunction: null,
@@ -20,1490 +23,578 @@
             connectivityTimer: null,
             connectionCheck: true,
             connectionPlaying: false,
+            connectionTimeout: null,
             online: true,
-            checkOnline: true,
             activeInput: false,
-            popupActive: false,
-            popupClass: "",
-            exitPopupClass: "",
+            popupActive: true,
             languageData: null,
+            keyMap: {},
             activeLanguage: "en",
             appName: "flixpremiere_stv",
             revision: "720",
             engineId: "91712624",
-            dispatchBackKey: false,
-            quitMessage: true,
             deviceId: null,
-            pushStateDisabled: false,
-            preventBackSet: false,
-            nativeDeviceId: "Not Available",
-            systemInfo: null
+            acceleratorSupport: false
         };
-        (function () {
-            window.history.pushState("TVA", "");
-            var a = "TVA";
-            var j = false;
-
-            function h(o) {
-                var v = a + "." + o + "=";
-                var p = "";
-                try {
-                    var r = document.cookie.split(";");
-                    var s = r.length, m = v.length;
-                    for (var q = 0; q < s; q++) {
-                        if (r[q].trim().indexOf(v) == 0) {
-                            var n = r[q].length - m;
-                            p = r[q].substr(m, n).trim();
-                            break
-                        }
-                    }
-                } catch (u) {
-                    j = window.localStorage != null
-                }
-                if (p == "" || j) {
-                    if (window.localStorage) {
-                        p = window.localStorage.getItem(o) || ""
-                    }
-                }
-            }
-
-            function d(q, r) {
-                if (j || window.localStorage) {
-                    window.localStorage.setItem(q, r)
-                } else {
-                    var p = a + "." + q + "=";
-                    var o = 31536000000;
-                    var n = new Date();
-                    n.setTime(Date.now() + o);
-                    var m = "; expires=" + n.toUTCString();
-                    document.cookie = p + r + m + "; path=/"
-                }
-            }
-
-            TVA.fromCommonFile = h;
-            TVA.toCommonFile = d;
-            TVA.deviceId = h("deviceId");
-            if (TVA.deviceId == null || TVA.deviceId == "") {
-                TVA.deviceId = TVA.device + "-" + Math.floor(Math.random() * 2147483647) + "-" + Date.now();
-                d("deviceId", TVA.deviceId)
-            }
-
-            function b() {
-                var n = document.createElement("style");
-                n.type = "text/css";
-                var o = " .tva_conn_alert, .tva_exit_alert { position: absolute; background-color: #111; font-size: 24px; border: 5px solid #eee; width: 675px; height: 170px; left: 303px; top: 316px; padding: 15px 0 15px 0; text-align: center; z-index: 9999 }  .tva_conn_alert > .title, .tva_exit_alert > .title { position: relative; color: #eee; margin-bottom: 10px; }  .tva_conn_alert > .text, .tva_exit_alert > .text { position: relative; color: #aaa; margin-bottom: 10px; }  .tva_exit_alert > .back { position: relative; color: #eee; margin-bottom: 10px; } ";
-                if (n.styleSheet) {
-                    n.styleSheet.cssText = o
-                } else {
-                    n.appendChild(document.createTextNode(o))
-                }
-                var m = document.head || document.getElementsByTagName("head")[0];
-                m.appendChild(n)
-            }
-
-            TVA.init = function (m) {
-                if (TVA.launched) {
-                    return true
-                }
-                l();
-                e();
-                TVA.setPopupClass();
-                TVA.setExitPopupClass();
-                b();
-                if (m) {
-                    if (m.pushStateDisabled) {
-                        if (window.history.state === "TVA") {
-                            window.history.back()
-                        }
-                        this.pushStateDisabled = true
-                    }
-                    TVA.debug(m.debug === true);
-                    TVA.connectionCheck = !(m.connectionCheck === false);
-                    if (m.quitMessage) {
-                        TVA.quitMessage = m.quitMessage
-                    }
-                }
-                if (TVA.connectionCheck) {
-                    TVA.connectivityTimer = window.setInterval("TVA.testConnectivity();", 5000)
-                }
-                document.addEventListener("click", function (o) {
-                    if (TVA.popupActive) {
-                        TVA.log("** CLOSE POPUP");
-                        g();
-                        TVA.pushStateHistory();
-                        o.preventDefault();
-                        o.stopPropagation()
-                    }
-                }, true);
-                document.onkeydown = function (o) {
-                    if (TVA.popupActive) {
-                        g();
-                        TVA.pushStateHistory()
-                    } else {
-                        TVA.keyDown(o)
-                    }
-                };
-                document.onkeyup = function (o) {
-                    TVA.keyUp(o)
-                };
-                TVA._buildLanguageData();
-                TVA.setNetworkPopupLang(TVA.getLanguage());
-                TVA.GAmark();
-                window.getDispatchBackKey = function () {
-                    return TVA.dispatchBackKey
-                };
-                window.setDispatchBackKey = function (o) {
-                    if (TVA.dispatchBackKey != o) {
-                        TVA.dispatchBackKey = o;
-                        if (TVA.dispatchBackKey) {
-                            TVA._pushStateHistory()
-                        } else {
-                            if (TVA.preventBackSet) {
-                                history.back()
-                            }
-                        }
-                        TVA.preventBackSet = true
-                    }
-                };
-                window.addEventListener("popstate", function (o) {
-                    TVA.log("POP, LEN: " + history.len + ", STATE: " + history.state);
-                    if (!TVA.preventBackSet) {
-                        return
-                    }
-                    if (TVA.dispatchBackKey) {
-                        TVA._pushStateHistory();
-                        Main.keyDown(461)
-                    } else {
-                        if (history.state != null) {
-                            if (history.state != null) {
-                                history.back()
-                            }
-                        }
-                    }
-                });
-                if (typeof document.hidden !== "undefined") {
-                    TVA.hidden = "hidden";
-                    TVA.visibilityChange = "visibilitychange"
-                } else {
-                    if (typeof document.webkitHidden !== "undefined") {
-                        TVA.hidden = "webkitHidden";
-                        TVA.visibilityChange = "webkitvisibilitychange"
-                    }
-                }
-                var n = function () {
-                    if (document[TVA.hidden]) {
-                        if (TVA_Player) {
-                            TVA.playerHiddenStatus = TVA_Player.mode;
-                            TVA_Player.pause(true)
-                        }
-                        g()
-                    } else {
-                        if (TVA_Player) {
-                            if (TVA.playerHiddenStatus == 1 || TVA.playerHiddenStatus == 3 || TVA.playerHiddenStatus == 4) {
-                                TVA_Player.pause()
-                            }
-                        }
-                    }
-                };
-                document.addEventListener(TVA.visibilityChange, n);
-                setTimeout(function () {
-                    setDispatchBackKey(true)
-                }, 500);
-                TVA.launched = true;
+        TVA.init = function (b) {
+            if (TVA.launched) {
                 return true
-            };
-
-            function e() {
-                try {
-                    webOS.service.request("luna://com.webos.service.sm", {
-                        method: "deviceid/getIDs", parameters: {idType: ["LGUDID"]}, onComplete: function (n) {
-                            if (n !== undefined && n !== null) {
-                                if (n.idList !== undefined && n.idList !== null && n.idList.length > 0) {
-                                    if (n.idList[0] !== undefined && n.idList[0] !== null) {
-                                        if (n.idList[0].idValue !== undefined && n.idList[0].idValue !== null) {
-                                            TVA.nativeDeviceId = n.idList[0].idValue
-                                        }
-                                    }
-                                }
-                            }
-                        }, onFailure: function (n) {
-                            error && error(n)
-                        }
-                    })
-                } catch (m) {
+            }
+            if (b) {
+                if (b.debug == true) {
+                    TVA.debug(true)
+                }
+                if (b.connectionCheck == false) {
+                    TVA.connectionCheck = false
                 }
             }
-
-            function l() {
-                if (TVA.systemInfo != null) {
-                    return
-                }
-                try {
-                    webOS.service.request("luna://com.webos.service.tv.systemproperty", {
-                        method: "getSystemInfo",
-                        parameters: {keys: ["UHD", "_3d", "sdkVersion", "modelName", "firmwareVersion"]},
-                        onComplete: function (o) {
-                            var n = o.returnValue;
-                            if (n) {
-                                TVA.systemInfo = o
-                            }
-                        },
-                        onFailure: function () {
-                            TVA.systemInfo = {}
-                        }
-                    })
-                } catch (m) {
-                    TVA.systemInfo = {}
-                }
-            }
-
-            TVA._pushStateHistory = function () {
-                if (!this.pushStateDisabled) {
-                    window.history.pushState("TVA", "")
-                }
-            };
-            TVA.addLanguage = function (n) {
-                if (TVA.languageData == null) {
-                    TVA.languageData = {}
-                }
-                TVA.languageData[n.language] = {};
-                var m = TVA.languageData[n.language];
-                m.popupConnNoTitle = n.noConnectionTitle;
-                m.popupConnNoText = n.noConnectionText;
-                m.popupConnBadTitle = n.badConnectionTitle;
-                m.popupConnBadText = n.badConnectionText;
-                m.popupConnBack = n.connectionBack;
-                m.popupQuitTitle = n.quitTitle || "";
-                m.popupQuitText = n.quitText || "";
-                m.popupConnDirection = n.direction
-            };
-            TVA.quit = function () {
-                window.close();
-                if (TVA.quitMessage) {
-                    window.setDispatchBackKey(false);
-                    k()
-                }
-            };
-            TVA.keyDown = function (n) {
-                n.preventDefault();
-                var m = n.keyCode;
-                if (TVA.deBugReporter) {
-                    if (TVA.keyindex == null) {
-                        TVA.keyindex = 0;
-                        TVA.codeCheck = [38, 38, 40, 40, 37, 39, 37, 39, 13]
-                    }
-                    clearTimeout(TVA.clearKeyBuffer);
-                    if (m != TVA.codeCheck[TVA.keyindex]) {
-                        TVA.keyindex = 0
-                    }
-                    TVA.keyindex++;
-                    if (TVA.keyindex >= TVA.codeCheck.length) {
-                        TVA.quit = function () {
-                        };
-                        location.reload()
-                    }
-                    TVA.clearKeyBuffer = setTimeout(function () {
-                        TVA.keyindex = 0
-                    }, 1000)
-                }
-                if (TVA.activeInput) {
-                    TVA_Input.processKey(m);
-                    if (m > 36 && m < 41) {
-                        Main.keyDown(m)
-                    }
-                } else {
-                    Main.keyDown(m)
-                }
-            };
-            TVA.keyUp = function (n) {
-                n.preventDefault();
-                var m = n.keyCode;
-                if (typeof Main.keyUp == "function") {
-                    Main.keyUp(m)
-                }
-            };
-            TVA.getNativeDeviceId = function () {
-                return TVA.nativeDeviceId
-            };
-            TVA.getDeviceId = function () {
-                return TVA.deviceId
-            };
-            TVA.GAmark = function () {
-                var m = TVA.getDeviceId();
-                var n = "##GA_ID##";
-                if (n.length == 9) {
-                    n = "UA-40884205-1"
-                }
-                _gaq.push(["b._setAccount", n], ["b._trackPageview", "/" + TVA.device + "/" + m + "/" + TVA.engineId + "/" + TVA.appName + "/"], ["b._setDeviceID", "/" + m])
-            };
-            TVA.setHover = function (n) {
-                var m = document.getElementById(TVA.onHover);
-                if (m != null) {
-                    m.classList.remove("hover")
-                }
-                var o = document.getElementById(n);
-                if (o != null) {
-                    o.classList.add("hover")
-                }
-                TVA.onHover = n
-            };
-            TVA.offHover = function (m) {
-                var n = document.getElementById(m);
-                if (n != null) {
-                    n.classList.remove("hover")
-                }
-                TVA.onHover = ""
-            };
-            TVA.setFocus = function (n) {
-                var m = document.getElementById(TVA.onFocus);
-                if (m != null) {
-                    m.classList.remove("focus")
-                }
-                var o = document.getElementById(n);
-                if (o != null) {
-                    o.classList.add("focus");
-                    o.focus && o.focus()
-                }
-                TVA.onFocus = n
-            };
-            TVA.offFocus = function (m) {
-                var n = document.getElementById(m);
-                if (n != null) {
-                    n.classList.remove("focus");
-                    n.blur && n.blur()
-                }
-                TVA.onFocus = ""
-            };
-            TVA.getLanguage = function () {
-                TVA.language = "";
-                for (var m in navigator) {
-                    if (m == "language") {
-                        TVA.language = navigator[m].substr(0, 2)
-                    }
-                }
-                return TVA.language
-            };
-            TVA.getUrlVars = function () {
-                var n = {};
-                var m = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (o, p, q) {
-                    n[p] = q
-                });
-                return n
-            };
-            TVA.getCountry = function () {
-                if (TVA.country != null) {
-                    return TVA.country
-                } else {
-                    TVA.fetchCountry();
-                    return TVA.country
-                }
-            };
-            TVA.fetchCountry = function () {
-                var m;
-                $.ajax({
-                    url: "http://api.wipmania.com/jsonp", dataType: "jsonp", success: function (n) {
-                        m = n.address.country_code;
-                        TVA.country = m
-                    }
-                })
-            };
-            TVA.getTime = function () {
-                var o = new Date(TVA.getEpoch());
-                var n = o.getMinutes();
-                var q = o.getHours();
-                var p = o.getSeconds();
-                if (n < 10) {
-                    n = "0" + n
-                }
-                if (q < 10) {
-                    q = "0" + q
-                }
-                if (p < 10) {
-                    p = "0" + p
-                }
-                return q + ":" + n + ":" + p
-            };
-            TVA.getDate = function () {
-                var o = new Date(TVA.getEpoch());
-                var p = o.getDate();
-                var n = o.getMonth() + 1;
-                var q = o.getFullYear();
-                if (n < 10) {
-                    n = "0" + n
-                }
-                if (p < 10) {
-                    p = "0" + p
-                }
-                return n + "/" + p + "/" + q
-            };
-            TVA.getEpoch = function () {
-                return new Date().getTime()
-            };
-            TVA.getTimezoneOffset = function () {
-                return new Date().getTimezoneOffset() * 60000
-            };
-            TVA.checkConnectivity = function () {
-                var n = true;
-                var m = true;
-                webOS.service.request("luna://com.palm.connectionmanager", {
-                    method: "getStatus", parameters: {}, onSuccess: function (o) {
-                        TVA.checkOnline = o.isInternetConnectionAvailable
-                    }, onFailure: function (o) {
-                        TVA.checkOnline = false
-                    }, onComplete: function (o) {
-                    }, subscribe: n, resubscribe: m
-                });
-                return TVA.checkOnline
-            };
-            TVA.setPopupClass = function (m) {
-                if (m != null && typeof m == "string") {
-                    TVA.popupClass = m
-                } else {
-                    TVA.popupClass = "tva_conn_alert"
-                }
-            };
-
-            function f(q, r, m) {
-                var s = TVA.languageData[TVA.activeLanguage];
-                var p = document.createElement("div");
-                var o = document.createElement("div");
-                var n = document.createElement("div");
-                n.textContent = s[q];
-                n.classList.add("text");
-                o.textContent = s[r];
-                o.classList.add("title");
-                p.style.direction = s[m];
-                p.classList.add(TVA.popupClass);
-                p.id = "connectionAlert";
-                p.appendChild(o);
-                p.appendChild(n);
-                document.body.appendChild(p)
-            }
-
-            function c(m) {
-                if (m != null) {
-                    m.parentNode.removeChild(m)
-                }
-            }
-
-            TVA.testConnectivity = function () {
-                if (TVA.online) {
-                    if (TVA.checkConnectivity()) {
-                        if (typeof TVA_Player !== "undefined" && this.connectionPlaying) {
-                            this.connectionPlaying = false;
-                            TVA_Player.pause(false)
-                        }
-                    } else {
-                        TVA.online = false;
-                        if (!TVA.popupActive) {
-                            c(document.getElementById("connectionAlert"));
-                            f("popupConnNoText", "popupConnNoTitle", "popupConnDirection")
-                        }
-                        if (typeof TVA_Player != "undefined" && (TVA_Player.getState() == TVA_Player.state.playing || TVA_Player.getState() == TVA_Player.state.buffering)) {
-                            this.connectionPlaying = true;
-                            TVA.playPosForNetwork = TVA_Player.getCurrentTime();
-                            TVA_Player.pause(true)
-                        }
-                        if (typeof Main.networkDown == "function") {
-                            Main.networkDown()
-                        }
-                    }
-                } else {
-                    if (TVA.checkConnectivity()) {
-                        c(document.getElementById("connectionAlert"));
-                        TVA.online = true;
-                        if (!TVA.popupActive) {
-                            f("popupConnBadText", "popupConnBadTitle", "popupConnDirection")
-                        }
-                        if (typeof TVA_Player !== "undefined" && this.connectionPlaying) {
-                            this.connectionPlaying = false;
-                            TVA_Player.player.load();
-                            TVA_Player.startTime = TVA.playPosForNetwork;
-                            TVA_Player.hasStartTime = true;
-                            TVA_Player.player.play()
-                        }
-                        window.clearTimeout(Main.netUp);
-                        window.setTimeout(function () {
-                            c(document.getElementById("connectionAlert"))
-                        }, 4000);
-                        if (typeof Main.networkUp == "function") {
-                            Main.networkUp()
-                        }
-                    } else {
-                    }
-                }
-            };
-            TVA.netUp = function () {
-            };
-            TVA.netDown = function () {
-            };
-            TVA.debug = function (o) {
-                TVA.deBugReporter = o;
-                var m = document.getElementById("debugWindow");
-                if (o == true) {
-                    if (!window.errorToggle) {
-                        window.errorToggle = true;
-                        var n = window.onerror;
-                        window.onerror = function (r, q, p) {
-                            var s = "Error: " + r + ", Script: " + q + ", Line: " + p;
-                            TVA.log(s, true);
-                            return false
-                        };
-                        if (window.$ != null) {
-                            if ($(document).ajaxError != null) {
-                                $(document).ajaxError(function (r, u, q) {
-                                    var p = "timeout";
-                                    if (u && u.readyState > 1) {
-                                        p = u.status
-                                    }
-                                    var s = "AJAX Error, URL: " + q.url + ", Status:" + p;
-                                    $(m).prepend("<p style='color:red'>" + s + "</p>")
-                                })
-                            }
-                        }
-                    }
-                    if (m != null) {
-                        m.style.display = "block"
-                    }
-                } else {
-                    if (m != null) {
-                        m.style.display = "none"
-                    }
-                }
-            };
-            TVA.log = function (q, n) {
-                console.log(q);
-                if (TVA.deBugReporter) {
-                    var o = document.createElement("p");
-                    if (n) {
-                        o.style.color = "red"
-                    }
-                    o.textContent = q;
-                    var m = document.getElementById("debugWindow");
-                    if (m != null) {
-                        m.insertBefore(o, m.firstElementChild)
-                    }
-                }
-            };
-            TVA.putInnerHTML = function (m, n) {
-                m.innerHTML = n
-            };
-            TVA.getJSONcors = function (q, m, p) {
-                var o = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D"' + encodeURIComponent(q) + '"&format=json&callback=';
-                TVA.callbackFunction = m;
-                if (p) {
-                    TVA.parse = false
-                }
-                var n = document.createElement("script");
-                n.type = "text/javascript";
-                n.src = o + "TVA.responseCallback";
-                document.getElementsByTagName("head")[0].appendChild(n)
-            };
-            TVA.responseCallback = function (n) {
-                var o;
-                if (TVA.parse) {
-                    o = JSON.parse(n.query.results.body.p)
-                } else {
-                    o = n.query.results.body.p;
-                    TVA.parse = true
-                }
-                var m = TVA.callbackFunction;
-                TVA.callbackFunction = null;
-                m(o)
-            };
-            TVA._buildLanguageData = function () {
-                TVA.addLanguage({
-                    language: "es",
-                    noConnectionTitle: "Sin conexión a la red",
-                    noConnectionText: "Por favor, compruebe su conexión a internet y vuelva a lanzar la aplicación",
-                    badConnectionTitle: "Inestabilidad de la red",
-                    badConnectionText: "Tú conexión a la red se ha desconectado. Algunos servicios de red pueden necesitar ser reiniciados",
-                    connectionBack: "Pulsa SALIR para cerrar la aplicación",
-                    quitTitle: "Cerrar aplicación",
-                    quitText: "Pulsa EXIT o INICIO para abrir la pantalla de Inicio",
-                    direction: "ltr"
-                });
-                TVA.addLanguage({
-                    language: "fr",
-                    noConnectionTitle: "Pas de connexion réseau",
-                    noConnectionText: "S'il vous plaît vérifier votre connexion Internet et relancer cette application",
-                    badConnectionTitle: "L'instabilité du réseau",
-                    badConnectionText: "Votre connexion au réseau a été débranché. Certains services réseau peut être nécessaire de redémarrer",
-                    connectionBack: "Appuyer SORTIE pour fermer l'application.",
-                    quitTitle: "Ferme L' Application",
-                    quitText: "Appuyer EXIT ou ACCUEIL pour ouvrir l'écran d'accueil.",
-                    direction: "ltr"
-                });
-                TVA.addLanguage({
-                    language: "tr",
-                    noConnectionTitle: "İnternet Bağlantısı Bulunamadı",
-                    noConnectionText: "Lütfen internet bağlantınızı kontrol edin ve uygulamayı tekrar açın",
-                    badConnectionTitle: "Bağlantı Hatası",
-                    badConnectionText: "İnternet bağlantısı kurulamadı. Bazı durumlarda bağlantı servisini yeniden başlatmanız gerekebilir",
-                    connectionBack: "EXIT düğmesine basın uygulamadan çıkın",
-                    quitTitle: "Kapat Uygulaması",
-                    quitText: "EXIT tuşuna basın veya HOME düğmesini Home ekranını açmak için",
-                    direction: "ltr"
-                });
-                TVA.addLanguage({
-                    language: "pt",
-                    noConnectionTitle: "Nenhuma ligação de rede",
-                    noConnectionText: "Por favor, verifique a ligação com a internet e relance esta aplicação",
-                    badConnectionTitle: "Instabilidade de rede",
-                    badConnectionText: "Houve problemas na ligação de rede. Alguns serviços podem precisar de ser reiniciados",
-                    connectionBack: "Pressione EXIT para sair a aplicação",
-                    quitTitle: "Encerrar a Aplicação ",
-                    quitText: "Pressione EXIT ou HOME para abrir o ecrã inicial",
-                    direction: "ltr"
-                });
-                TVA.addLanguage({
-                    language: "it",
-                    noConnectionTitle: "Nessuna connessione di rete",
-                    noConnectionText: "Verifica la tua connessione di rete e rilancia questa applicazione",
-                    badConnectionTitle: "Rete instabile",
-                    badConnectionText: "La connessione di rete era scollegata. Potrebbe essere necessario riavviare alcuni servizi di rete",
-                    connectionBack: "Premi EXIT per chiudere l'applicazione",
-                    quitTitle: "Chiusure Applicazione",
-                    quitText: "Premi il tasto EXIT o HOME per aprire l'Home screen",
-                    direction: "ltr"
-                });
-                TVA.addLanguage({
-                    language: "en",
-                    noConnectionTitle: "No Network Connection",
-                    noConnectionText: "Please check your internet connection and re-launch this application",
-                    badConnectionTitle: "Network Instability",
-                    badConnectionText: "Your network connection was disconnected. Some network services may need to be restarted",
-                    connectionBack: "Press EXIT to exit the application",
-                    quitTitle: "Close Application",
-                    quitText: "Press EXIT or HOME button to open the Home screen",
-                    direction: "ltr"
-                });
-                TVA.addLanguage({
-                    language: "de",
-                    noConnectionTitle: "Keine Netzwerkverbindung",
-                    noConnectionText: "Bitte überprüfen Sie Ihre Internetverbindung und starten sie diese Anwendung neu",
-                    badConnectionTitle: "Netzwerkinstabilität",
-                    badConnectionText: "Ihre Netzwerkverbindung wurde getrennt. Einige Netzdienste können neu gestartet werden",
-                    connectionBack: "Drücken Sie die EXIT Taste um diese Anwendung zu schließen",
-                    quitTitle: "Anwendung schließen",
-                    quitText: "Drücken Sie die EXIT oder die HOME Taste um den Startbildschirm zu öffnen",
-                    direction: "ltr"
-                })
-            };
-            TVA.setNetworkPopupLang = function (m) {
-                if (TVA.languageData[m] != null) {
-                    TVA.activeLanguage = m
-                } else {
-                    TVA.activeLanguage = "en"
-                }
-            };
-            TVA.setExitPopupClass = function (m) {
-                if (m != null && typeof m == "string") {
-                    TVA.exitPopupClass = m
-                } else {
-                    TVA.exitPopupClass = "tva_exit_alert"
-                }
-            };
-
-            function i() {
-                var q = TVA.languageData[TVA.activeLanguage];
-                var o = document.createElement("div");
-                var n = document.createElement("div");
-                var m = document.createElement("div");
-                m.textContent = q.popupQuitText;
-                m.classList.add("text");
-                n.textContent = q.popupQuitTitle;
-                n.classList.add("title");
-                o.style.direction = q.popupConnDirection;
-                o.classList.add(TVA.exitPopupClass);
-                o.id = "TVAPopup";
-                o.appendChild(n);
-                o.appendChild(m);
-                if (q.popupConnBack != null) {
-                    var p = document.createElement("div");
-                    p.textContent = q.popupConnBack;
-                    p.classList.add("back");
-                    o.appendChild(p)
-                }
-                document.body.appendChild(o)
-            }
-
-            function k() {
-                TVA.popupActiveKeys = true;
-                c(document.getElementById("TVAPopup"));
-                i();
-                TVA.popupActive = true
-            }
-
-            function g() {
-                c(document.getElementById("TVAPopup"));
-                TVA.popupActive = false;
-                TVA.popupActiveKeys = false;
-                setDispatchBackKey(true)
-            }
-        })();
-        window.webOS = window.webOS || {};
-        (function () {
             try {
-                var b = JSON.parse(PalmSystem.deviceInfo);
-                webOS.device = b
+                TVA.year = "20" + webapis.productinfo.getModelCode().split("_")[0];
+                TVA.log("Samsung Tizen model year " + TVA.year)
             } catch (a) {
-                webOS.device = {}
+                TVA.log("Unable to get Samsung Tizen device year")
             }
-        })();
-        (function () {
-            if (window.PalmSystem) {
-                webOS.platform = {};
-                if (navigator.userAgent.indexOf("SmartTV") > -1 || navigator.userAgent.indexOf("Large Screen") > -1) {
-                    webOS.platform.tv = true
-                } else {
-                    if (webOS.device.platformVersionMajor && webOS.device.platformVersionMinor) {
-                        try {
-                            var a = parseInt(webOS.device.platformVersionMajor);
-                            var b = parseInt(webOS.device.platformVersionMinor);
-                            if (a < 3 || a == 3 && b <= 0) {
-                                webOS.platform.legacy = true
-                            } else {
-                                webOS.platform.open = true
-                            }
-                        } catch (c) {
-                            webOS.platform.open = true
-                        }
-                    } else {
-                        webOS.platform.open = true
-                    }
+            var d = function () {
+                var f = function (e) {
+                    TVA.log("[NetworkStateChangedCallback] data: " + e + " changed");
+                    setTimeout(TVA.testConnectivity, 1000)
+                };
+                var g = -1;
+                try {
+                    f();
+                    g = webapis.network.addNetworkStateChangeListener(f)
+                } catch (h) {
+                    TVA.log("addNetworkStateChangeListener exception [" + h.code + "] name: " + h.name + " message: " + h.message)
                 }
-            }
-        })();
-        (function () {
-            webOS.fetchAppId = function () {
-                if (window.PalmSystem) {
-                    return PalmSystem.identifier.split(" ")[0]
+                if (g > -1) {
+                    TVA.log("addNetworkStateChangeListener success listener ID [" + g + "] ")
+                } else {
+                    setTimeout(d, 5000)
                 }
             };
-            webOS.fetchAppInfo = function () {
-                if (!this.appInfo) {
-                    var c = function (h) {
-                        if (window.palmGetResource) {
-                            try {
-                                return palmGetResource(h)
-                            } catch (i) {
-                                console.log("error reading appinfo.json" + i.message)
-                            }
-                        } else {
-                            var g = new XMLHttpRequest;
-                            g.open("GET", h + "?palmGetResource=true", false);
-                            g.send(null);
-                            if (g.status >= 200 && g.status < 300) {
-                                return g.responseText
-                            } else {
-                                console.log("error reading appinfo.json")
-                            }
-                        }
-                    };
-                    var d = this.fetchAppId();
-                    var f = [this.fetchAppRootPath() + "appinfo.json", "file:///media/cryptofs/apps/usr/palm/applications/" + d + "/appinfo.json", "file:///usr/palm/applications/" + d + "/appinfo.json"];
-                    var a = f[0].indexOf(d);
-                    if (a > -1) {
-                        f.unshift(f[0].substring(0, a) + d + "/appinfo.json")
-                    }
-                    var e = undefined;
-                    for (var b = 0; b < f.length && !e; b++) {
-                        e = c(f[b])
-                    }
-                    if (e) {
-                        this.appInfo = enyo.json.parse(e)
-                    }
-                }
-                return this.appInfo
-            };
-            webOS.fetchAppRootPath = function () {
-                var c = window.location.href;
-                if ("baseURI" in window.document) {
-                    c = window.document.baseURI
-                } else {
-                    var b = window.document.getElementsByTagName("base");
-                    if (b.length > 0) {
-                        c = b[0].href
-                    }
-                }
-                var a = c.match(new RegExp(".*://[^#]*/"));
-                if (a) {
-                    return a[0]
-                }
-                return ""
+            if (TVA.connectionCheck) {
+                d()
             }
-        })();
-        (function () {
-            var a = !(webOS.platform.legacy && webOS.device.platformVersionMajor && parseInt(webOS.device.platformVersionMajor) < 3);
+            document.onkeydown = function (e) {
+                TVA.keyDown(e)
+            };
+            document.onkeyup = function (e) {
+                TVA.keyUp(e)
+            };
+            TVA._buildLanguageData();
+            TVA.setNetworkPopupLang(TVA.getLanguage());
+            TVA.GAmark();
+            TVA.launched = true;
+            try {
+                TVA.year = webapis.productinfo.getSmartTVServerVersion().match(/2[0-9]{3}/)[0]
+            } catch (c) {
+                TVA.log("Device year failed.");
+                TVA.log(c)
+            }
+            tizen.systeminfo.getPropertyValue("LOCALE", function (e) {
+                TVA.country = e.country;
+                TVA.language = e.country
+            });
+            tizen.tvinputdevice.registerKey("MediaPlay");
+            tizen.tvinputdevice.registerKey("MediaPause");
+            tizen.tvinputdevice.registerKey("MediaPlayPause");
+            tizen.tvinputdevice.registerKey("MediaStop");
+            tizen.tvinputdevice.registerKey("MediaRewind");
+            tizen.tvinputdevice.registerKey("MediaFastForward");
+            tizen.tvinputdevice.registerKey("ColorF0Red");
+            tizen.tvinputdevice.registerKey("ColorF1Green");
+            tizen.tvinputdevice.registerKey("ColorF2Yellow");
+            tizen.tvinputdevice.registerKey("ColorF3Blue");
+            tizen.tvinputdevice.registerKey("0");
+            tizen.tvinputdevice.registerKey("1");
+            tizen.tvinputdevice.registerKey("2");
+            tizen.tvinputdevice.registerKey("3");
+            tizen.tvinputdevice.registerKey("4");
+            tizen.tvinputdevice.registerKey("5");
+            tizen.tvinputdevice.registerKey("6");
+            tizen.tvinputdevice.registerKey("7");
+            tizen.tvinputdevice.registerKey("8");
+            tizen.tvinputdevice.registerKey("9");
+            return true
+        };
+        TVA.addLanguage = function (b) {
+            if (TVA.languageData == null) {
+                TVA.languageData = {}
+            }
+            TVA.languageData[b.language] = {};
+            var a = TVA.languageData[b.language];
+            a.popupConnNoTitle = b.noConnectionTitle;
+            a.popupConnNoText = b.noConnectionText;
+            a.popupConnBadTitle = b.badConnectionTitle;
+            a.popupConnBadText = b.badConnectionText;
+            a.popupConnBack = b.connectionBack;
+            a.popupQuitTitle = b.quitTitle || "";
+            a.popupQuitText = b.quitText || "";
+            a.popupConnDirection = b.direction
+        };
+        TVA.quit = function (b) {
+            var a = (typeof b == "boolean" && b == true) || (typeof b == "object" && b.hide == true);
             if (a) {
-                var b = {};
-                Mojo = window.Mojo || {};
-                Mojo.keyboardShown = function (c) {
-                    b.isShowing = c
-                };
-                webOS.keyboard = {
-                    types: {text: 0, password: 1, search: 2, range: 3, email: 4, number: 5, phone: 6, url: 7, color: 8}, isShowing: function () {
-                        return b.isShowing || false
-                    }, show: function (c) {
-                        if (this.isManualMode() && window.PalmSystem) {
-                            PalmSystem.keyboardShow(c || 0)
-                        }
-                    }, hide: function () {
-                        if (this.isManualMode() && window.PalmSystem) {
-                            PalmSystem.keyboardHide()
-                        }
-                    }, setManualMode: function (c) {
-                        b.manual = c;
-                        if (window.PalmSystem) {
-                            PalmSystem.setManualKeyboardEnabled(c)
-                        }
-                    }, isManualMode: function () {
-                        return b.manual || false
-                    }, forceShow: function (c) {
-                        this.setManualMode(true);
-                        if (window.PalmSystem) {
-                            PalmSystem.keyboardShow(c || 0)
-                        }
-                    }, forceHide: function () {
-                        this.setManualMode(true);
-                        if (window.PalmSystem) {
-                            PalmSystem.keyboardHide()
-                        }
-                    }
+                if (TVA_Player && TVA_Player.active) {
+                    TVA_Player.hide()
                 }
+                tizen.application.getCurrentApplication().hide()
+            } else {
+                if (TVA_Player) {
+                    TVA_Player.deinit()
+                }
+                tizen.application.getCurrentApplication().exit()
             }
-        })();
-        (function () {
-            if ((webOS.platform.legacy || webOS.platform.open) && !window.cordova) {
-                var b = function (e, f) {
-                    var c = document.createEvent("Events");
-                    c.initEvent(e, false, false);
-                    for (var d in f) {
-                        c[d] = f[d]
-                    }
-                    document.dispatchEvent(c)
-                };
-                Mojo = window.Mojo || {};
-                var a = JSON.parse(PalmSystem.launchParams || "{}") || {};
-                b("webOSLaunch", {type: "webOSLaunch", detail: a});
-                window.Mojo.relaunch = function (d) {
-                    var c = JSON.parse(PalmSystem.launchParams || "{}") || {};
-                    if (c["palm-command"] && c["palm-command"] == "open-app-menu") {
-                        b("menubutton", {});
-                        return true
-                    } else {
-                        b("webOSRelaunch", {type: "webOSRelaunch", detail: c})
-                    }
-                };
-                if (window.PalmSystem) {
-                    window.PalmSystem.stageReady()
-                }
+        };
+        TVA.keyDown = function (b) {
+            if (b.keyCode !== 229) {
+                b.preventDefault()
             }
-        })();
-        (function () {
-            webOS.notification = {
-                showToast: function (e, l) {
-                    var p = e.message || "";
-                    var i = e.icon || "";
-                    var b = webOS.fetchAppId();
-                    var n = e.appId || b;
-                    var o = e.params || {};
-                    var h = e.target;
-                    var j = e.noaction;
-                    var k = e.stale || false;
-                    var g = e.soundClass || "";
-                    var a = e.soundFile || "";
-                    var f = e.soundDurationMs || "";
-                    if (webOS.platform.legacy || webOS.platform.open) {
-                        var d = e.response || {banner: true};
-                        var c = PalmSystem.addBannerMessage(p, JSON.stringify(o), i, g, a, f);
-                        l && l(c)
-                    } else {
-                        if (p.length > 60) {
-                            console.warn("Toast notification message is longer than recommended. May not display as intended")
-                        }
-                        var m = {sourceId: b, message: p, stale: k, noaction: j};
-                        if (i && i.length > 0) {
-                            m.iconUrl = i
-                        }
-                        if (!j) {
-                            if (h) {
-                                m.onclick = {target: h}
-                            } else {
-                                m.onclick = {appId: n, params: o}
-                            }
-                        }
-                        this.showToastRequest = webOS.service.request("palm://com.webos.notification", {
-                            method: "createToast", parameters: m, onSuccess: function (q) {
-                                l && l(q.toastId)
-                            }, onFailure: function (q) {
-                                console.error("Failed to create toast: " + JSON.stringify(q));
-                                l && l()
-                            }
-                        })
-                    }
-                }, removeToast: function (a) {
-                    if (webOS.platform.legacy || webOS.platform.open) {
-                        try {
-                            PalmSystem.removeBannerMessage(a)
-                        } catch (b) {
-                            console.warn(b);
-                            PalmSystem.clearBannerMessage()
-                        }
-                    } else {
-                        this.removeToastRequest = webOS.service.request("palm://com.webos.notification", {method: "closeToast", parameters: {toastId: a}})
-                    }
-                }, supportsDashboard: function () {
-                    return webOS.platform.legacy || webOS.platform.open
-                }, showDashboard: function (a, b) {
-                    if (webOS.platform.legacy || webOS.platform.open) {
-                        var c = window.open(a, "_blank", 'attributes={"window":"dashboard"}');
-                        if (b) {
-                            c.document.write(b)
-                        }
-                        if (c.PalmSystem) {
-                            c.PalmSystem.stageReady()
-                        }
-                        return c
-                    } else {
-                        console.warn("Dashboards are not supported on this version of webOS.")
-                    }
+            var a = b.keyCode;
+            if (TVA.deBugReporter) {
+                if (TVA.keyindex == null) {
+                    TVA.keyindex = 0;
+                    TVA.codeCheck = [38, 38, 40, 40, 37, 39, 37, 39, 13]
                 }
+                clearTimeout(TVA.clearKeyBuffer);
+                if (a != TVA.codeCheck[TVA.keyindex]) {
+                    TVA.keyindex = 0
+                }
+                TVA.keyindex++;
+                if (TVA.keyindex >= TVA.codeCheck.length) {
+                    TVA.quit = function () {
+                    };
+                    location.reload()
+                }
+                TVA.clearKeyBuffer = setTimeout(function () {
+                    TVA.keyindex = 0
+                }, 1000)
             }
-        })();
-        (function () {
-            webOS.orientation = {
-                setOrientation: function (a) {
-                    if (window.PalmSystem && PalmSystem.setWindowOrientation) {
-                        PalmSystem.setWindowOrientation(a)
-                    }
-                }, getOrientation: function () {
-                    if (window.PalmSystem && PalmSystem.setWindowOrientation) {
-                        return PalmSystem.windowOrientation
+            if (a == 10252) {
+                if (typeof TVA_Player != "undefined") {
+                    if (TVA_Player.mode == 1) {
+                        TVA.playPause = true
                     } else {
-                        return "up"
+                        TVA.playPause = false
                     }
                 }
-            }
-        })();
-        (function () {
-            var f = -1;
-            var a = 0;
-            var c = 1;
-            var b = 2;
-            var e = 3;
-            var g = 4;
-            var h = 5;
-            var j = 6;
-            var i = 7;
-            var k = function (l) {
-                return !!l && typeof l === "object" && Object.prototype.toString.call(l) !== "[object Array]"
-            };
-            var d = function (o, l, n, m) {
-                if (window.PalmSystem) {
-                    if (n && !k(n)) {
-                        o = e;
-                        n = {msgid: l};
-                        l = "MISMATCHED_FMT";
-                        m = null;
-                        console.warn("webOSLog called with invalid format: keyVals must be an object")
-                    }
-                    if (!l && o != i) {
-                        console.warn("webOSLog called with invalid format: messageId was empty")
-                    }
-                    if (n) {
-                        n = JSON.stringify(n)
-                    }
-                    if (window.PalmSystem.PmLogString) {
-                        if (o == i) {
-                            window.PalmSystem.PmLogString(o, null, null, m)
-                        } else {
-                            window.PalmSystem.PmLogString(o, l, n, m)
-                        }
-                    } else {
-                        console.error("Unable to send log; PmLogString not found in this version of PalmSystem")
-                    }
-                }
-            };
-            webOS.emergency = function (l, n, m) {
-                d(a, l, n, m)
-            };
-            webOS.alert = function (l, n, m) {
-                d(c, l, n, m)
-            };
-            webOS.critical = function (l, n, m) {
-                d(b, l, n, m)
-            };
-            webOS.error = function (l, n, m) {
-                d(e, l, n, m)
-            };
-            webOS.warning = function (l, n, m) {
-                d(g, l, n, m)
-            };
-            webOS.notice = function (l, n, m) {
-                d(h, l, n, m)
-            };
-            webOS.info = function (l, n, m) {
-                d(j, l, n, m)
-            };
-            webOS.debug = function (l) {
-                d(i, "", "", l)
-            }
-        })();
-        (function () {
-            function a(b, c) {
-                this.uri = b;
-                c = c || {};
-                if (c.method) {
-                    if (this.uri.charAt(this.uri.length - 1) != "/") {
-                        this.uri += "/"
-                    }
-                    this.uri += c.method
-                }
-                if (typeof c.onSuccess === "function") {
-                    this.onSuccess = c.onSuccess
-                }
-                if (typeof c.onFailure === "function") {
-                    this.onFailure = c.onFailure
-                }
-                if (typeof c.onComplete === "function") {
-                    this.onComplete = c.onComplete
-                }
-                this.params = typeof c.parameters === "object" ? c.parameters : {};
-                this.subscribe = c.subscribe || false;
-                if (this.subscribe) {
-                    this.params.subscribe = c.subscribe
-                }
-                if (this.params.subscribe) {
-                    this.subscribe = this.params.subscribe
-                }
-                this.resubscribe = c.resubscribe || false;
-                this.send()
-            }
-
-            a.prototype.send = function () {
-                if (!window.PalmServiceBridge) {
-                    console.error("PalmServiceBridge not found.");
-                    return
-                }
-                this.bridge = new PalmServiceBridge;
-                var b = this;
-                this.bridge.onservicecallback = this.callback = function (f) {
-                    var c;
-                    if (b.cancelled) {
-                        return
-                    }
-                    try {
-                        c = JSON.parse(f)
-                    } catch (d) {
-                        c = {errorCode: -1, errorText: f}
-                    }
-                    if ((c.errorCode || c.returnValue == false) && b.onFailure) {
-                        b.onFailure(c);
-                        if (b.resubscribe && b.subscribe) {
-                            b.delayID = setTimeout(function () {
-                                b.send()
-                            }, a.resubscribeDelay)
-                        }
-                    } else {
-                        if (b.onSuccess) {
-                            b.onSuccess(c)
-                        }
-                    }
-                    if (b.onComplete) {
-                        b.onComplete(c)
-                    }
-                    if (!b.subscribe) {
-                        b.cancel()
-                    }
-                };
-                this.bridge.call(this.uri, JSON.stringify(this.params))
-            };
-            a.prototype.cancel = function () {
-                this.cancelled = true;
-                if (this.resubscribeJob) {
-                    clearTimeout(this.delayID)
-                }
-                if (this.bridge) {
-                    this.bridge.cancel();
-                    this.bridge = undefined
-                }
-            };
-            a.prototype.toString = function () {
-                return "[LS2Request]"
-            };
-            a.resubscribeDelay = 10000;
-            webOS.service = {
-                request: function (b, c) {
-                    return new a(b, c)
-                },
-                systemPrefix: webOS.platform.legacy || webOS.platform.open ? "com.palm" : "com.webos",
-                protocol: webOS.platform.legacy && webOS.device.platformVersionMajor && parseInt(webOS.device.platformVersionMajor) <= 1 ? "palm://" : "luna://"
-            };
-            navigator.service = {request: webOS.service.request};
-            navigator.service.Request = navigator.service.request
-        })();
-        (function () {
-            webOS.libVersion = "0.1.0"
-        })();
-        (function () {
-            webOS.window = {
-                launchParams: function (a) {
-                    a = a || window;
-                    if (a.PalmSystem) {
-                        return JSON.parse(a.PalmSystem.launchParams || "{}") || {}
-                    }
-                    return {}
-                }, isActivated: function (a) {
-                    a = a || window;
-                    if (a.PalmSystem) {
-                        return a.PalmSystem.isActivated
-                    }
-                    return false
-                }, activate: function (a) {
-                    a = a || window;
-                    if (a.PalmSystem) {
-                        a.PalmSystem.activate()
-                    }
-                }, deactivate: function (a) {
-                    a = a || window;
-                    if (a.PalmSystem) {
-                        a.PalmSystem.deactivate()
-                    }
-                }, newCard: function (a, b) {
-                    if (!a && !(webOS.platform.legacy || webOS.platform.open)) {
-                        a = "about:blank"
-                    }
-                    var c = window.open(a);
-                    if (b) {
-                        c.document.write(b)
-                    }
-                    if (c.PalmSystem) {
-                        c.PalmSystem.stageReady()
-                    }
-                    return c
-                }, setFullScreen: function (a) {
-                    if (window.PalmSystem && PalmSystem.enableFullScreenMode) {
-                        PalmSystem.enableFullScreenMode(a)
-                    }
-                }, setWindowProperties: function (a, b) {
-                    if (arguments.length == 1) {
-                        b = a;
-                        a = window
-                    }
-                    if (a.PalmSystem && a.PalmSystem.setWindowProperties) {
-                        a.webOS.window.properties = b = b || {};
-                        a.PalmSystem.setWindowProperties(b)
-                    }
-                }, getWindowProperties: function (a) {
-                    a = a || window;
-                    a.webOS.window.properties = a.webOS.window.properties || {};
-                    return a.webOS.window.properties
-                }, blockScreenTimeout: function (a) {
-                    webOS.window.properties.blockScreenTimeout = a;
-                    this.setWindowProperties(navigator.windowProperties)
-                }, setSubtleLightbar: function (a) {
-                    webOS.window.properties.setSubtleLightbar = a;
-                    this.setWindowProperties(webOS.window.properties)
-                }, setFastAccelerometer: function (a) {
-                    webOS.window.properties.fastAccelerometer = a;
-                    this.setWindowProperties(webOS.window.properties)
-                }
-            }
-        })();
-        !function () {
-            window.webOS = window.webOS || {}, "object" == typeof module && module.exports && (module.exports = window.webOS)
-        }(), function () {
-            if (webOS.platform = {}, window.PalmSystem) {
-                if (navigator.userAgent.indexOf("SmartWatch") > -1) {
-                    webOS.platform.watch = !0
+                if (TVA.playPause) {
+                    TVA.playPause = false;
+                    a = 19
                 } else {
-                    if (navigator.userAgent.indexOf("SmartTV") > -1 || navigator.userAgent.indexOf("Large Screen") > -1) {
-                        webOS.platform.tv = !0
-                    } else {
-                        try {
-                            var c = JSON.parse(PalmSystem.deviceInfo || "{}");
-                            if (c.platformVersionMajor && c.platformVersionMinor) {
-                                var b = parseInt(c.platformVersionMajor), d = parseInt(c.platformVersionMinor);
-                                b < 3 || 3 == b && d <= 0 ? webOS.platform.legacy = !0 : webOS.platform.open = !0
-                            }
-                        } catch (a) {
-                            webOS.platform.open = !0
+                    TVA.playPause = true;
+                    a = 415
+                }
+            }
+            if (TVA.activeInput) {
+                TVA_Input.processKey(a)
+            } else {
+                Main.keyDown(a)
+            }
+        };
+        TVA.keyUp = function (b) {
+            b.preventDefault();
+            var a = b.keyCode;
+            if (typeof Main.keyUp == "function") {
+                Main.keyUp(a)
+            }
+        };
+        TVA.getNativeDeviceId = function () {
+            TVA.log(tizen.systeminfo.getCapabilities().duid);
+            return tizen.systeminfo.getCapabilities().duid
+        };
+        TVA.getDeviceId = function () {
+            if (TVA.deviceId == null) {
+                TVA.deviceId = TVA.getNativeDeviceId()
+            }
+            return TVA.deviceId
+        };
+        TVA.generateDeviceId = function () {
+        };
+        TVA.fromCommonFile = function (a) {
+            localStorage.getItem(a)
+        };
+        TVA.toCommonFile = function (b, a) {
+            localStorage.setItem(b, a)
+        };
+        TVA.GAmark = function () {
+            var a = TVA.getNativeDeviceId();
+            if (a == null || a === "Not available") {
+                a = TVA.getDeviceId()
+            }
+            gaId = "##GA_ID##";
+            if (gaId.length == 9) {
+                gaId = "UA-40884205-1"
+            }
+            _gaq.push(["b._setAccount", gaId], ["b._trackPageview", "/" + TVA.device + "/" + TVA.engineId + "/" + TVA.appName + "/"])
+        };
+        TVA.setHover = function (b) {
+            var a = document.getElementById(TVA.onHover);
+            var c = document.getElementById(b);
+            if (a) {
+                if ($(a).hasClass("hover")) {
+                    $(a).removeClass("hover")
+                }
+            }
+            $(c).addClass("hover");
+            TVA.onHover = b
+        };
+        TVA.offHover = function (a) {
+            var b = document.getElementById(a);
+            $(b).removeClass("hover");
+            TVA.onHover = ""
+        };
+        TVA.setFocus = function (b) {
+            var c = document.getElementById(b);
+            var a = document.getElementById(TVA.onFocus);
+            if (a) {
+                if ($(a).hasClass("focus")) {
+                    $(a).removeClass("focus")
+                }
+            }
+            $(c).addClass("focus");
+            $(c).focus();
+            TVA.onFocus = b
+        };
+        TVA.offFocus = function (a) {
+            var b = document.getElementById(a);
+            $(b).removeClass("focus");
+            TVA.onFocus = "";
+            $(b).blur()
+        };
+        TVA.getLanguage = function () {
+            if (TVA.language == null) {
+                return "Not available"
+            } else {
+                return TVA.language
+            }
+        };
+        TVA.getCountry = function () {
+            if (TVA.country == null) {
+                return "Not available"
+            } else {
+                return TVA.country
+            }
+        };
+        TVA.getUrlVars = function () {
+            var a = {};
+            window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (b, c, d) {
+                a[c] = d
+            });
+            return a
+        };
+        TVA.getTime = function () {
+            var b = tizen.time.getCurrentDateTime();
+            var a = b.getMinutes();
+            var d = b.getHours();
+            var c = b.getSeconds();
+            if (a < 10) {
+                a = "0" + a
+            }
+            if (d < 10) {
+                d = "0" + d
+            }
+            if (c < 10) {
+                c = "0" + c
+            }
+            return d + ":" + a + ":" + c
+        };
+        TVA.getDate = function () {
+            var b = tizen.time.getCurrentDateTime();
+            var c = b.getDate();
+            var a = b.getMonth() + 1;
+            var e = b.getFullYear();
+            if (a < 10) {
+                a = "0" + a
+            }
+            if (c < 10) {
+                c = "0" + c
+            }
+            return a + "/" + c + "/" + e
+        };
+        TVA.getEpoch = function () {
+            return new Date().getTime()
+        };
+        TVA.getTimezoneOffset = function () {
+            return new Date().getTimezoneOffset() * 60000
+        };
+        TVA.checkConnectivity = function () {
+            TVA.log("** CHECK CONNECTIVITY");
+            var a = null;
+            try {
+                a = webapis.network.getActiveConnectionType()
+            } catch (b) {
+                TVA.log("getActiveConnectionType exception [" + b.code + "] name: " + b.name + " message: " + b.message)
+            }
+            if (null != a) {
+                TVA.log("[getActiveConnectionType] Active Connection Type: " + a)
+            }
+            TVA.log("connType: " + a);
+            return (a > 0)
+        };
+        TVA.testConnectivity = function () {
+            var e = TVA.languageData[TVA.activeLanguage];
+            if (TVA.online) {
+                if (TVA.checkConnectivity()) {
+                } else {
+                    TVA.online = false;
+                    window.clearInterval(TVA.connectionTimeout);
+                    if (TVA.popupActive) {
+                        var c = document.createElement("div");
+                        var b = document.createElement("div");
+                        var a = document.createElement("div");
+                        var d = document.createElement("div");
+                        d.textContent = e.popupConnBack;
+                        d.style.color = "#EEE";
+                        d.style.textAlign = "center";
+                        d.style.marginTop = "10px";
+                        a.textContent = e.popupConnNoText;
+                        a.style.color = "#AAA";
+                        a.style.textAlign = "center";
+                        b.textContent = e.popupConnNoTitle;
+                        b.style.color = "#EEE";
+                        b.style.textAlign = "center";
+                        c.style.position = "absolute";
+                        c.style.backgroundColor = "#111";
+                        c.style.direction = e.popupConnDirection;
+                        if ($(window).width() < 1000) {
+                            c.style.fontSize = "18px";
+                            c.style.border = "3px solid #EEE";
+                            c.style.width = "450px";
+                            c.style.height = "100px";
+                            c.style.left = "255px";
+                            c.style.top = "235px";
+                            c.style.padding = "10px 0px 10px 0px"
+                        } else {
+                            c.style.fontSize = "24px";
+                            c.style.border = "5px solid #EEE";
+                            c.style.width = "675px";
+                            c.style.height = "170px";
+                            c.style.left = "303px";
+                            c.style.top = "316px";
+                            c.style.padding = "15px 0px 15px 0px"
                         }
-                        window.Mojo = window.Mojo || {
-                            relaunch: function (f) {
-                            }
-                        }, window.PalmSystem && PalmSystem.stageReady && PalmSystem.stageReady()
+                        c.id = "connectionAlert";
+                        c.appendChild(b);
+                        c.appendChild(a);
+                        c.appendChild(d);
+                        c.style.zIndex = 3000;
+                        $("#connectionAlert").remove();
+                        document.getElementById("body").appendChild(c)
+                    }
+                    if (typeof TVA_Player != "undefined" && (TVA_Player.getState() == TVA_Player.state.playing || TVA_Player.getState() == TVA_Player.state.buffering)) {
+                        this.connectionPlaying = true;
+                        TVA.playPosForNetwork = TVA_Player.getCurrentTime();
+                        TVA_Player.pause(true)
+                    }
+                    if (typeof Main.networkDown == "function") {
+                        Main.networkDown()
                     }
                 }
             } else {
-                webOS.platform.unknown = !0
-            }
-        }(), function () {
-            webOS.fetchAppId = function () {
-                if (window.PalmSystem && PalmSystem.identifier) {
-                    return PalmSystem.identifier.split(" ")[0]
-                }
-            }, webOS.fetchAppInfo = function (d, b) {
-                if (webOS.appInfo) {
-                    d && d(webOS.appInfo)
-                } else {
-                    var f = function (g, h) {
-                        if (!g && h) {
-                            try {
-                                webOS.appInfo = JSON.parse(h), d && d(webOS.appInfo)
-                            } catch (e) {
-                                console.error("Unable to parse appinfo.json file for " + appID), d && d()
-                            }
+                if (TVA.checkConnectivity()) {
+                    $("#connectionAlert").remove();
+                    TVA.online = true;
+                    if (TVA.popupActive) {
+                        var c = document.createElement("div");
+                        var b = document.createElement("div");
+                        var a = document.createElement("div");
+                        var d = document.createElement("div");
+                        d.textContent = e.popupConnBack;
+                        d.style.color = "#EEE";
+                        d.style.textAlign = "center";
+                        d.style.marginTop = "10px";
+                        a.textContent = e.popupConnBadText;
+                        a.style.color = "#AAA";
+                        a.style.textAlign = "center";
+                        b.textContent = e.popupConnBadTitle;
+                        b.style.color = "#EEE";
+                        b.style.textAlign = "center";
+                        c.style.position = "absolute";
+                        c.style.backgroundColor = "#111";
+                        c.style.direction = e.popupConnDirection;
+                        if ($(window).width() < 1000) {
+                            c.style.fontSize = "18px";
+                            c.style.border = "3px solid #EEE";
+                            c.style.width = "450px";
+                            c.style.height = "100px";
+                            c.style.left = "255px";
+                            c.style.top = "235px";
+                            c.style.padding = "10px 0px 10px 0px"
                         } else {
-                            d && d()
+                            c.style.fontSize = "24px";
+                            c.style.border = "5px solid #EEE";
+                            c.style.width = "675px";
+                            c.style.height = "170px";
+                            c.style.left = "303px";
+                            c.style.top = "316px";
+                            c.style.padding = "15px 0px 15px 0px"
                         }
-                    }, a = new XMLHttpRequest;
-                    a.onreadystatechange = function () {
-                        4 == a.readyState && (a.status >= 200 && a.status < 300 || 0 === a.status ? f(void 0, a.responseText) : f({status: 404}))
+                        c.id = "connectionAlert";
+                        c.appendChild(b);
+                        c.appendChild(a);
+                        c.style.zIndex = 3000;
+                        $("#connectionAlert").remove();
+                        document.getElementById("body").appendChild(c)
+                    }
+                    if (typeof TVA_Player != "undefined" && this.connectionPlaying && TVA_Player.mode == 2) {
+                        this.connectionPlaying = false;
+                        TVA_Player.pause()
+                    }
+                    window.clearInterval(TVA.connectionTimeout);
+                    TVA.connectionTimeout = window.setInterval(function () {
+                        $("#connectionAlert").remove()
+                    }, 10000);
+                    if (typeof Main.networkUp == "function") {
+                        Main.networkUp()
+                    }
+                } else {
+                }
+            }
+        };
+        TVA.netUp = function () {
+        };
+        TVA.netDown = function () {
+        };
+        TVA.debug = function (a) {
+            TVA.deBugReporter = a;
+            if (a) {
+                if (!window.errorToggle) {
+                    window.errorToggle = true;
+                    var b = window.onerror;
+                    window.onerror = function (e, d, c) {
+                        var f = "Error: " + e + ", Script: " + d + ", Line: " + c;
+                        $("#debugWindow").prepend("<p style='color:red'>" + f + "</p>");
+                        b && b(e, d, c);
+                        return false
                     };
-                    try {
-                        a.open("GET", b || "appinfo.json", !0), a.send(null)
-                    } catch (c) {
-                        f({status: 404})
-                    }
-                }
-            }, webOS.fetchAppRootPath = function () {
-                var b = window.location.href;
-                if ("baseURI" in window.document) {
-                    b = window.document.baseURI
-                } else {
-                    var a = window.document.getElementsByTagName("base");
-                    a.length > 0 && (b = a[0].href)
-                }
-                var c = b.match(new RegExp(".*://[^#]*/"));
-                return c ? c[0] : ""
-            }, webOS.platformBack = function () {
-                if (window.PalmSystem && PalmSystem.platformBack) {
-                    return PalmSystem.platformBack()
-                }
-            }
-        }(), function () {
-            webOS.deviceInfo = function (c) {
-                if (this.device) {
-                    c(this.device)
-                } else {
-                    this.device = {};
-                    try {
-                        var b = JSON.parse(PalmSystem.deviceInfo);
-                        this.device.modelName = b.modelName, this.device.modelNameAscii = b.modelNameAscii, this.device.version = b.platformVersion, this.device.versionMajor = b.platformVersionMajor, this.device.versionMinor = b.platformVersionMinor, this.device.versionDot = b.platformVersionDot, this.device.sdkVersion = b.platformVersion, this.device.screenWidth = b.screenWidth, this.device.screenHeight = b.screenHeight
-                    } catch (d) {
-                        this.device.modelName = this.device.modelNameAscii = "webOS Device"
-                    }
-                    this.device.screenHeight = this.device.screenHeight || screen.height, this.device.screenWidth = this.device.screenWidth || screen.width;
-                    var a = this;
-                    webOS.platform.tv ? webOS.service.request("luna://com.webos.service.tv.systemproperty", {
-                        method: "getSystemInfo",
-                        parameters: {keys: ["firmwareVersion", "modelName", "sdkVersion", "UHD"]},
-                        onSuccess: function (e) {
-                            if (a.device.modelName = e.modelName || a.device.modelName, a.device.modelNameAscii = e.modelName || a.device.modelNameAscii, a.device.sdkVersion = e.sdkVersion || a.device.sdkVersion, a.device.uhd = "true" === e.UHD, e.firmwareVersion && "0.0.0" !== e.firmwareVersion || (e.firmwareVersion = e.sdkVersion), e.firmwareVersion) {
-                                a.device.version = e.firmwareVersion;
-                                for (var h = a.device.version.split("."), f = ["versionMajor", "versionMinor", "versionDot"], i = 0; i < f.length; i++) {
-                                    try {
-                                        a.device[f[i]] = parseInt(h[i])
-                                    } catch (g) {
-                                        a.device[f[i]] = h[i]
-                                    }
-                                }
+                    if ($(document).ajaxError != null) {
+                        $(document).ajaxError(function (f, h, d) {
+                            var c = "timeout";
+                            if (h && h.readyState > 1) {
+                                c = h.status
                             }
-                            c(a.device)
-                        },
-                        onFailure: function (e) {
-                            c(a.device)
-                        }
-                    }) : (webOS.platform.watch && (this.device.modelName = this.device.modelNameAscii = "webOS Watch"), c(this.device))
-                }
-            }
-        }(), function () {
-            webOS.feedback = {
-                play: function (b) {
-                    if (webOS && webOS.platform && webOS.platform.watch) {
-                        var a = {name: b || "touch", sink: "pfeedback"};
-                        if (!window.PalmServiceBridge) {
-                            return
-                        }
-                        webOS.service.request("luna://com.palm.audio/systemsounds", {method: "playFeedback", parameters: a, subscribe: !1, resubscribe: !1})
-                    }
-                }
-            }
-        }(), function () {
-            webOS.keyboard = {
-                isShowing: function () {
-                    return !!(PalmSystem && PalmSystem.isKeyboardVisible && PalmSystem.isKeyboardVisible())
-                }
-            }
-        }(), function () {
-            webOS.notification = {
-                showToast: function (w, C) {
-                    var h = w.message || "", q = w.icon || "", D = webOS.fetchAppId(), j = w.appId || D, g = w.appParams || {}, A = w.target, y = w.noaction, p = w.stale || !1, k = w.soundClass || "",
-                        B = w.soundFile || "", x = w.soundDurationMs || "";
-                    if (webOS.platform.legacy || webOS.platform.open) {
-                        var v = (w.response || {banner: !0}, PalmSystem.addBannerMessage(h, JSON.stringify(g), q, k, B, x));
-                        C && C(v)
-                    } else {
-                        h.length > 60 && console.warn("Toast notification message is longer than recommended. May not display as intended");
-                        var z = {sourceId: D, message: h, stale: p, noaction: y};
-                        q && q.length > 0 && (z.iconUrl = q), y || (A ? z.onclick = {target: A} : z.onclick = {
-                            appId: j,
-                            params: g
-                        }), this.showToastRequest = webOS.service.request("palm://com.webos.notification", {
-                            method: "createToast", parameters: z, onSuccess: function (a) {
-                                C && C(a.toastId)
-                            }, onFailure: function (a) {
-                                console.error("Failed to create toast: " + JSON.stringify(a)), C && C()
-                            }
+                            var g = "AJAX Error, URL: " + d.url + ", Status:" + c;
+                            $("#debugWindow").prepend("<p style='color:red'>" + g + "</p>")
                         })
                     }
-                }, removeToast: function (b) {
-                    if (webOS.platform.legacy || webOS.platform.open) {
-                        try {
-                            PalmSystem.removeBannerMessage(b)
-                        } catch (a) {
-                            console.warn(a), PalmSystem.clearBannerMessage()
-                        }
-                    } else {
-                        this.removeToastRequest = webOS.service.request("palm://com.webos.notification", {method: "closeToast", parameters: {toastId: b}})
-                    }
-                }, supportsDashboard: function () {
-                    return webOS.platform.legacy || webOS.platform.open
-                }, showDashboard: function (b, a) {
-                    if (webOS.platform.legacy || webOS.platform.open) {
-                        var c = window.open(b, "_blank", 'attributes={"window":"dashboard"}');
-                        return a && c.document.write(a), c.PalmSystem && c.PalmSystem.stageReady(), c
-                    }
-                    console.warn("Dashboards are not supported on this version of webOS.")
                 }
+                $("#debugWindow").show()
+            } else {
+                $("#debugWindow").hide()
             }
-        }(), function () {
-            var j = 0, p = 1, d = 2, h = 3, q = 4, f = 5, b = 6, m = 7, k = function (a) {
-                return !!a && "object" == typeof a && "[object Array]" !== Object.prototype.toString.call(a)
-            }, g = function (i, a, l, c) {
-                window.PalmSystem && (l && !k(l) && (i = h, l = {msgid: a}, a = "MISMATCHED_FMT", c = null, console.warn("webOSLog called with invalid format: keyVals must be an object")), a || i == m || console.warn("webOSLog called with invalid format: messageId was empty"), l && (l = JSON.stringify(l)), window.PalmSystem.PmLogString ? i == m ? window.PalmSystem.PmLogString(i, null, null, c) : window.PalmSystem.PmLogString(i, a, l, c) : console.error("Unable to send log; PmLogString not found in this version of PalmSystem"))
-            };
-            webOS.emergency = function (c, e, a) {
-                g(j, c, e, a)
-            }, webOS.alert = function (c, l, a) {
-                g(p, c, l, a)
-            }, webOS.critical = function (l, c, a) {
-                g(d, l, c, a)
-            }, webOS.error = function (c, a, i) {
-                g(h, c, a, i)
-            }, webOS.warning = function (c, a, i) {
-                g(q, c, a, i)
-            }, webOS.notice = function (c, a, i) {
-                g(f, c, a, i)
-            }, webOS.info = function (c, a, i) {
-                g(b, c, a, i)
-            }, webOS.debug = function (a) {
-                g(m, "", "", a)
+        };
+        TVA.log = function (a) {
+            console.log(a);
+            if (TVA.deBugReporter) {
+                $("#debugWindow").prepend("<p>" + a + "</p>")
             }
-        }(), function () {
-            function a(c, b) {
-                this.uri = c, b = b || {}, b.method && ("/" != this.uri.charAt(this.uri.length - 1) && (this.uri += "/"), this.uri += b.method), "function" == typeof b.onSuccess && (this.onSuccess = b.onSuccess), "function" == typeof b.onFailure && (this.onFailure = b.onFailure), "function" == typeof b.onComplete && (this.onComplete = b.onComplete), this.params = "object" == typeof b.parameters ? b.parameters : {}, this.subscribe = b.subscribe || !1, this.subscribe && (this.params.subscribe = b.subscribe), this.params.subscribe && (this.subscribe = this.params.subscribe), this.resubscribe = b.resubscribe || !1, this.send()
+        };
+        TVA.supportsAccelerator = function () {
+            try {
+                TVA.acceleratorSupport = tizen.systeminfo.getCapability("http://tizen.org/custom/accelerator")
+            } catch (a) {
             }
-
-            a.prototype.send = function () {
-                if (!window.PalmServiceBridge) {
-                    return this.onFailure && this.onFailure({errorCode: -1, errorText: "PalmServiceBridge not found.", returnValue: !1}), this.onComplete && this.onComplete({
-                        errorCode: -1,
-                        errorText: "PalmServiceBridge not found.",
-                        returnValue: !1
-                    }), void console.error("PalmServiceBridge not found.")
-                }
-                this.bridge = new PalmServiceBridge;
-                var b = this;
-                this.bridge.onservicecallback = this.callback = function (e) {
-                    var c;
-                    if (!b.cancelled) {
-                        try {
-                            c = JSON.parse(e)
-                        } catch (d) {
-                            c = {errorCode: -1, errorText: e, returnValue: !1}
-                        }
-                        (c.errorCode || 0 == c.returnValue) && b.onFailure ? (b.onFailure(c), b.resubscribe && b.subscribe && (b.delayID = setTimeout(function () {
-                            b.send()
-                        }, a.resubscribeDelay))) : b.onSuccess && b.onSuccess(c), b.onComplete && b.onComplete(c), b.subscribe || b.cancel()
-                    }
-                }, this.bridge.call(this.uri, JSON.stringify(this.params))
-            }, a.prototype.cancel = function () {
-                this.cancelled = !0, this.resubscribeJob && clearTimeout(this.delayID), this.bridge && (this.bridge.cancel(), this.bridge = void 0)
-            }, a.prototype.toString = function () {
-                return "[LS2Request]"
-            }, a.resubscribeDelay = 10000, webOS.service = {
-                request: function (b, c) {
-                    return new a(b, c)
-                }, systemPrefix: "com.webos.", protocol: "luna://"
-            }, navigator.service = {request: webOS.service.request}, navigator.service.Request = navigator.service.request
-        }(), function () {
-            webOS.libVersion = "0.1.0"
-        }(), function () {
-            webOS.voicereadout = {
-                readAlert: function (j, p) {
-                    var d = "boolean" != typeof p || p;
-                    if (webOS && webOS.platform && webOS.platform.watch) {
-                        var h, q, f = function (a) {
-                            webOS.service.request("luna://com.webos.settingsservice", {
-                                method: "getSystemSettings", parameters: {category: "VoiceReadOut"}, onSuccess: function (c) {
-                                    c && c.settings.talkbackEnable && a()
-                                }, onFailure: function (c) {
-                                    console.error("Failed to get system VoiceReadOut settings: " + JSON.stringify(c))
-                                }
-                            })
-                        }, b = function (a) {
-                            webOS.service.request("luna://com.webos.settingsservice", {
-                                method: "getSystemSettings", parameters: {keys: ["localeInfo"]}, onSuccess: function (c) {
-                                    h = c.settings.localeInfo.locales.TTS, a()
-                                }, onFailure: function (c) {
-                                    console.error("Failed to get system localeInfo settings: " + JSON.stringify(c))
-                                }
-                            })
-                        }, m = function (a) {
-                            webOS.service.request("luna://com.webos.settingsservice", {
-                                method: "getSystemSettings", parameters: {category: "option", key: "ttsSpeechRate"}, onSuccess: function (c) {
-                                    q = Number(c.settings.ttsSpeechRate), a()
-                                }, onFailure: function (c) {
-                                    console.error("Failed to get system speechRate settings: " + JSON.stringify(c))
-                                }
-                            })
-                        }, k = function () {
-                            webOS.service.request("luna://com.lge.service.tts", {method: "speak", parameters: {locale: h, text: j, speechRate: q}})
-                        };
-                        f(function () {
-                            b(function () {
-                                m(k)
-                            })
-                        })
-                    } else {
-                        if (webOS && webOS.platform && webOS.platform.tv) {
-                            var g = function (a) {
-                                webOS.service.request("luna://com.webos.settingsservice", {
-                                    method: "getSystemSettings", parameters: {keys: ["audioGuidance"], category: "option"}, onSuccess: function (c) {
-                                        c && "on" === c.settings.audioGuidance && a()
-                                    }, onFailure: function (c) {
-                                        console.error("Failed to get system AudioGuidance settings: " + JSON.stringify(c))
-                                    }
-                                })
-                            }, k = function () {
-                                webOS.service.request("luna://com.webos.service.tts", {
-                                    method: "speak", parameters: {text: j, clear: d}, onFailure: function (a) {
-                                        console.error("Failed to readAlertMessage: " + JSON.stringify(a))
-                                    }
-                                })
-                            };
-                            g(k)
-                        } else {
-                            console.warn("Platform doesn't support TTS api.")
-                        }
-                    }
-                }
+            return TVA.acceleratorSupport
+        };
+        TVA.putInnerHTML = function (a, b) {
+            a.innerHTML = b
+        };
+        TVA.getJSONcors = function (e, a, d) {
+            var c = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D"' + encodeURIComponent(e) + '"&format=json&callback=';
+            TVA.callbackFunction = a;
+            if (d) {
+                TVA.parse = false
             }
-        }();
+            var b = document.createElement("script");
+            b.type = "text/javascript";
+            b.src = c + "TVA.responseCallback";
+            document.getElementsByTagName("head")[0].appendChild(b)
+        };
+        TVA.responseCallback = function (b) {
+            var c;
+            if (TVA.parse) {
+                c = JSON.parse(b.query.results.body.p)
+            } else {
+                c = b.query.results.body.p;
+                TVA.parse = true
+            }
+            var a = TVA.callbackFunction;
+            TVA.callbackFunction = null;
+            a(c)
+        };
+        TVA._buildLanguageData = function () {
+            TVA.addLanguage({
+                language: "es",
+                noConnectionTitle: "Sin conexión a la red",
+                noConnectionText: "Por favor, compruebe su conexión a internet y vuelva a lanzar la aplicación",
+                badConnectionTitle: "Inestabilidad de la red",
+                badConnectionText: "Tú conexión a la red se ha desconectado. Algunos servicios de red pueden necesitar ser reiniciados",
+                connectionBack: "Pulse salir/volver para cerrar",
+                direction: "ltr"
+            });
+            TVA.addLanguage({
+                language: "fr",
+                noConnectionTitle: "Pas de connexion réseau",
+                noConnectionText: "S'il vous plaît vérifier votre connexion Internet et relancer cette application",
+                badConnectionTitle: "L'instabilité du réseau",
+                badConnectionText: "Votre connexion au réseau a été débranché. Certains services réseau peut être nécessaire de redémarrer",
+                connectionBack: "Appuyez sur EXIT/RETURN pour fermer",
+                direction: "ltr"
+            });
+            TVA.addLanguage({
+                language: "tr",
+                noConnectionTitle: "İnternet Bağlantısı Bulunamadı",
+                noConnectionText: "Lütfen internet bağlantınızı kontrol edin ve uygulamayı tekrar açın",
+                badConnectionTitle: "Bağlantı Hatası",
+                badConnectionText: "İnternet bağlantısı kurulamadı. Bazı durumlarda bağlantı servisini yeniden başlatmanız gerekebilir",
+                connectionBack: "Kapatmak için geri tuşuna basın",
+                direction: "ltr"
+            });
+            TVA.addLanguage({
+                language: "pt",
+                noConnectionTitle: "Nenhuma ligação de rede",
+                noConnectionText: "Por favor, verifique a ligação com a internet e relance esta aplicação",
+                badConnectionTitle: "Instabilidade de rede",
+                badConnectionText: "Houve problemas na ligação de rede. Alguns serviços podem precisar de ser reiniciados",
+                connectionBack: "Prima EXIT/RETURN para fechar",
+                direction: "ltr"
+            });
+            TVA.addLanguage({
+                language: "it",
+                noConnectionTitle: "Nessuna connessione di rete",
+                noConnectionText: "Verifica la tua connessione di rete e rilancia questa applicazione",
+                badConnectionTitle: "Rete instabile",
+                badConnectionText: "La connessione di rete era scollegata. Potrebbe essere necessario riavviare alcuni servizi di rete",
+                connectionBack: "Premi EXIT/RETURN per chiudere",
+                direction: "ltr"
+            });
+            TVA.addLanguage({
+                language: "en",
+                noConnectionTitle: "No Network Connection",
+                noConnectionText: "Please check your internet connection and re-launch this application",
+                badConnectionTitle: "Network Instability",
+                badConnectionText: "Your network connection was disconnected. Some network services may need to be restarted",
+                connectionBack: "Press EXIT/RETURN to exit the application",
+                direction: "ltr"
+            });
+            TVA.addLanguage({
+                language: "de",
+                noConnectionTitle: "Keine Netzwerkverbindung",
+                noConnectionText: "Bitte überprüfen Sie Ihre Internetverbindung und starten sie diese Anwendung neu",
+                badConnectionTitle: "Netzwerkinstabilität",
+                badConnectionText: "Ihre Netzwerkverbindung wurde getrennt. Einige Netzdienste können neu gestartet werden",
+                connectionBack: "Drücken Sie die exit/return Taste, um die Anwendung zu beenden",
+                direction: "ltr"
+            })
+        };
+        TVA.setNetworkPopupLang = function (a) {
+            if (TVA.languageData[a] != null) {
+                TVA.activeLanguage = a
+            } else {
+                TVA.activeLanguage = "en"
+            }
+        };
         (function () {
             var gE = encodeURIComponent, hJ = Infinity, hH = setTimeout, gD = isNaN, fF = Math, gC = decodeURIComponent;
 
@@ -3613,41 +2704,50 @@
         })();
     </script>
     </TVA>
-    <script type="text/javascript">var TVA_Storage = {open: false};
-    TVA_Storage.openStore = function () {
-        if (typeof(localStorage) === "undefined") {
-            return false
-        } else {
-            TVA_Storage.open = true
-        }
-        return true
-    };
-    TVA_Storage.fromFile = function (a) {
-        if (TVA_Storage.open) {
-            return localStorage.getItem(a)
-        } else {
-            TVA.log("FILE: file store is not open")
-        }
-        return null
-    };
-    TVA_Storage.toFile = function (a, b) {
-        if (TVA_Storage.open) {
-            localStorage.setItem(a, b)
-        } else {
-            TVA.log("FILE: file store is not open")
-        }
-    };
-    TVA_Storage.deleteFile = function (a) {
-        if (TVA_Storage.open) {
-            localStorage.removeItem(a)
-        } else {
-            TVA.log("FILE: file store is not open")
-        }
-    };
-    TVA_Storage.deleteStore = function () {
-        localStorage.clear();
-        TVA_Storage.open = false
-    };
+    <script type="text/javascript">
+        var TVA_Storage = (function () {
+            var a = function () {
+                this.open = false
+            };
+            a.prototype = {
+                openStore: function () {
+                    if (typeof(localStorage) === "undefined") {
+                        return false
+                    } else {
+                        this.open = true;
+                        TVA.log("LocalStorage is available")
+                    }
+                    return true
+                }, fromFile: function (b) {
+                    if (this.open) {
+                        TVA.log("READ Name: " + b);
+                        TVA.log("READ Value: " + localStorage.getItem(b));
+                        return localStorage.getItem(b)
+                    } else {
+                        TVA.log("FILE: file store is not open")
+                    }
+                    return null
+                }, toFile: function (b, c) {
+                    if (this.open) {
+                        TVA.log("WRITE Name: " + b);
+                        TVA.log("WRITE Value: " + c);
+                        localStorage.setItem(b, c)
+                    } else {
+                        TVA.log("FILE: file store is not open")
+                    }
+                }, deleteFile: function (b) {
+                    if (this.open) {
+                        localStorage.removeItem(b)
+                    } else {
+                        TVA.log("FILE: file store is not open")
+                    }
+                }, deleteStore: function () {
+                    localStorage.clear();
+                    this.open = false
+                }
+            };
+            return new a()
+        })();
     </script>
     </TVA>
     <script type="text/javascript">
@@ -3660,570 +2760,607 @@
             width: 1280,
             xPosition: 0,
             yPosition: 0,
-            playPosBuffer: null,
             MIMEType: "",
             defaultMIMEAud: "audio/mpeg",
             defaultMIMEVid: "video/mp4",
             playPos: 0,
             defaultSkip: 10,
             mode: 0,
-            previousMode: -1,
             active: false,
             preBufferMode: 0,
             avMode: 0,
             defaultLoading: false,
+            pauseFix: false,
+            started: false,
             avState: {video: 0, audio: 1},
             state: {stopped: 0, playing: 1, paused: 2, buffering: 4, connecting: 3, finished: 5, error: 6},
-            canPlay: false,
-            startTime: 0,
-            FFRWSpeed: 0,
-            skipDirection: "Forward",
-            onSeekedCallback: null,
-            lastFFRW: null,
-            keyRepetition: 1000,
-            maxFFRWSpeed: 10,
-            maxAllowedSkipTime: 1200,
-            sourceError: false,
-            bitrate: 0,
-            videoDecoded: {byteCount: 0, time: 0},
-            ignoreNextConnection: false,
             simulateSeconds: false,
             compatible3DModes: [],
-            active3DMode: "2D",
-            mode3D: {Off: "2D", Top_Bottom: "top_bottom", Side_By_Side: "side_by_side_LR", Frame_Sequence: "frame-sequential", Checker_BD: "check_board"},
+            active3DMode: webapis.avplay.MODE_3D_EFFECT_OFF,
+            mode3D: {
+                Off: webapis.avplay.MODE_3D_EFFECT_OFF,
+                Top_Bottom: webapis.avplay.MODE_3D_EFFECT_TOP_BOTTOM,
+                Side_By_Side: webapis.avplay.MODE_3D_EFFECT_SIDE_BY_SIDE,
+                Line_By_Line: webapis.avplay.MODE_3D_EFFECT_LINE_BY_LINE,
+                Vertical_Stripe: webapis.avplay.MODE_3D_EFFECT_VERTICAL_STRIPE,
+                Frame_Sequence: webapis.avplay.MODE_3D_EFFECT_FRAME_SEQUENCE,
+                Checker_BD: webapis.avplay.MODE_3D_EFFECT_CHECKER_BD,
+                From_2D_To_3D: webapis.avplay.MODE_3D_FROM_2D_TO_3D
+            },
             autoRecover: {
                 enable: false, time: 0, TRY: 3, attempts: 3, autoRecoverPlay: false, process: function () {
                     TVA_Player.play({startTime: TVA_Player.autoRecover.time})
                 }
             },
-            resetFFRWSpeedTimeout: null
+            opened: false,
+            zindex: -1,
+            _seekLocked: false,
+            _seekLockTimer: 0,
+            _seekLockDuration: 4000,
+            _FORWARD: 1,
+            _REWIND: -1,
+            _seekTimer: 0,
+            _seekAmount: 0,
+            _seekFromPlaying: false,
+            _seeking: false,
+            beforePrepareCallback: null,
+            beforeSuspendCallback: null,
+            beforeRestoreCallback: null
         };
         (function () {
-            function d(i, g, h) {
-                i.addEventListener(g, TVA_Player[h])
-            }
-
-            function a() {
-                var g = TVA_Player.player;
-                d(g, "canplay", "onCanPlay");
-                d(g, "play", "onPlay");
-                d(g, "playing", "onPlaying");
-                d(g, "pause", "onPause");
-                d(g, "waiting", "onBuffering");
-                d(g, "timeupdate", "onPlayHeadChanged");
-                d(g, "progress", "onBufferProgress");
-                d(g, "ended", "onEnded");
-                d(g, "error", "onError");
-                d(g, "seeking", "onSeeking");
-                d(g, "seeked", "onSeeked");
-                d(g, "loadstart", "onConnecting");
-                d(g, "loadeddata", "onConnectingEnds")
-            }
-
-            function f(i, g, h) {
-                i.removeEventListener(g, TVA_Player[h])
-            }
-
-            TVA_Player.init = function (g) {
-                TVA_Player.url = null;
-                TVA_Player.playPosBuffer = null;
-                TVA_Player.playPos = 0;
-                TVA_Player.previousMode = -1;
-                TVA_Player.canPlay = false;
-                TVA_Player.mode = 0;
-                TVA_Player.preBufferMode = 0;
-                TVA_Player.avMode = 0;
-                TVA_Player.startTime = 0;
-                TVA_Player.FFRWSpeed = 0;
-                TVA_Player.onSeekedCallback = null;
-                if (!g) {
-                    g = {}
+            var _isLive = false;
+            var _lastSuspendTime = 0;
+            var _lastSuspendHandler = null;
+            TVA_Player.init = function (settings) {
+                if (TVA_Player.started) {
+                    return false
                 }
-                if (g.width) {
-                    TVA_Player.width = g.width
+                if (TVA_Player.player) {
+                    TVA_Player.player.stop();
+                    TVA_Player.player = null
                 }
-                if (g.height) {
-                    TVA_Player.height = g.height
-                }
-                if (g.xPosition) {
-                    TVA_Player.xPosition = g.xPosition
-                }
-                if (g.yPosition) {
-                    TVA_Player.yPosition = g.yPosition
-                }
-                if (g.url) {
-                    TVA_Player.url = g.url
-                }
-                if (g.defaultSkip) {
-                    TVA_Player.defaultSkip = g.defaultSkip
-                }
-                if (g.MIMEType) {
-                    TVA_Player.MIMEType = g.MIMEType
-                }
-                if (g.defaultLoading) {
-                    TVA_Player.defaultLoading = g.defaultLoading
-                }
-                if (g.simulateSeconds) {
-                    TVA_Player.simulateSeconds = g.simulateSeconds
-                }
-                TVA_Player.autoRecoverSetup(g);
-                if (g.avMode && g.avMode == "audio") {
-                    TVA_Player.readyAudio()
-                } else {
-                    TVA_Player.readyVideo()
-                }
-                TVA_Player.player = document.getElementById("HTML5Player");
-                return (TVA_Player.player != null)
-            };
-            TVA_Player.clearPlayer = function () {
-                var g = document.getElementById("TVA_PlayerBox");
-                var i = document.getElementById("HTML5Player");
-                if (g != null) {
-                    if (TVA_Player.player) {
-                        TVA_Player.pause(true);
-                        var h = TVA_Player.player;
-                        f(h, "canplay", "onCanPlay");
-                        f(h, "play", "onPlay");
-                        f(h, "playing", "onPlaying");
-                        f(h, "pause", "onPause");
-                        f(h, "waiting", "onBuffering");
-                        f(h, "timeupdate", "onPlayHeadChanged");
-                        f(h, "progress", "onBufferProgress");
-                        f(h, "ended", "onEnded");
-                        f(h, "error", "onError");
-                        if (TVA_Player.player.firstChild) {
-                            f(TVA_Player.player.firstChild, "error", "onError")
+                TVA_Player.buildPlayer();
+                webapis.avplay.stop();
+                TVA_Player.player = webapis.avplay;
+                TVA_Player.listener = {
+                    onbufferingstart: TVA_Player.bufferingStart,
+                    onbufferingprogress: TVA_Player.onBufferingProgress,
+                    onbufferingcomplete: TVA_Player.bufferingComplete,
+                    onstreamcompleted: TVA_Player.renderingComplete,
+                    oncurrentplaytime: TVA_Player.setCurrentTime,
+                    onerror: TVA_Player.onError,
+                    onevent: function (eventType, eventData) {
+                        TVA.log("Event type: " + eventType + ", eventData: " + eventData)
+                    },
+                    onsubtitlechange: function (duration, text, data3, data4) {
+                        TVA.log("Subtitle Changed.")
+                    },
+                    ondrmevent: function (drmEvent, drmData) {
+                        TVA.log("DRM callback: " + drmEvent + ", data: " + drmData);
+                        if (drmData.name == "Challenge") {
+                            var drmParam = {ResponseMessage: drmData.message};
+                            TVA.log("setDrm InstallLicense: " + JSON.stringify(drmParam));
+                            TVA_Player.player.setDrm("PLAYREADY", "InstallLicense", JSON.stringify(drmParam))
                         }
-                        f(h, "seeking", "onSeeking");
-                        f(h, "seeked", "onSeeked");
-                        f(h, "loadstart", "onConnecting");
-                        f(h, "loadeddata", "onConnectingEnds");
-                        g.removeChild(i);
+                    }
+                };
+                if (!settings) {
+                    settings = {}
+                }
+                if (settings.width) {
+                    TVA_Player.width = settings.width
+                }
+                if (settings.height) {
+                    TVA_Player.height = settings.height
+                }
+                if (settings.xPosition) {
+                    TVA_Player.xPosition = settings.xPosition
+                }
+                if (settings.yPosition) {
+                    TVA_Player.yPosition = settings.yPosition
+                }
+                if (settings.url) {
+                    TVA_Player.url = settings.url
+                }
+                if (settings.defaultSkip) {
+                    TVA_Player.defaultSkip = settings.defaultSkip
+                }
+                if (settings.MIMEType) {
+                    TVA_Player.MIMEType = settings.MIMEType
+                }
+                if (settings.defaultLoading) {
+                    TVA_Player.defaultLoading = settings.defaultLoading
+                }
+                if (settings.simulateSeconds) {
+                    TVA_Player.simulateSeconds = settings.simulateSeconds
+                }
+                TVA_Player.autoRecoverSetup(settings);
+                TVA_Player.started = true;
+                TVA_Player.player.setListener(TVA_Player.listener, TVA_Player._logSuccess, TVA_Player._logException);
+                return true
+            };
+            TVA_Player.buildPlayer = function (specificPlayer) {
+                var playerHolder = document.getElementById("TVA_PlayerBox");
+                if (playerHolder) {
+                    if (TVA_Player.player) {
+                        try {
+                            if (TVA_Player.player.stop) {
+                                TVA_Player.player.stop()
+                            }
+                        } catch (e) {
+                            TVA.log("Player stop failed.")
+                        }
                         TVA_Player.player = null
                     }
+                    var playerObj = document.getElementById("av-player");
+                    playerHolder.removeChild(playerObj)
                 } else {
-                    g = document.createElement("span");
-                    g.setAttribute("id", "TVA_PlayerBox");
-                    document.getElementById("body").appendChild(g)
+                    TVA.log("CREATE PLAYER HOLDER");
+                    playerHolder = document.createElement("span");
+                    playerHolder.setAttribute("id", "TVA_PlayerBox");
+                    document.getElementsByTagName("body")[0].appendChild(playerHolder)
                 }
-                TVA_Player.playPosBuffer = null;
-                TVA_Player.playPos = 0;
-                TVA_Player.previousMode = -1;
-                TVA_Player.canPlay = false;
-                TVA_Player.onLoaded = false;
-                TVA_Player.mode = 0;
-                TVA_Player.preBufferMode = 0;
-                TVA_Player.avMode = 0;
-                TVA_Player.startTime = 0;
-                TVA_Player.FFRWSpeed = 0;
-                TVA_Player.onSeekedCallback = null
+                if (specificPlayer) {
+                    playerHolder.innerHTML = specificPlayer
+                } else {
+                    TVA.log("appending object player");
+                    TVA_Player.objectPlayer = $('<OBJECT id="av-player" type="application/avplayer"></OBJECT>');
+                    TVA_Player.objectPlayer.css({position: "absolute", left: 0, top: 0, width: 0, height: 0, "z-index": TVA_Player.zindex});
+                    $("#TVA_PlayerBox").append(TVA_Player.objectPlayer)
+                }
             };
-            TVA_Player.prepareSource = function (h) {
-                var k;
-                if (TVA_Player.MIMEType == "") {
-                    if (TVA_Player.url.match(/\.m3u8/i)) {
-                        k = "application/vnd.apple.mpegurl"
-                    } else {
-                        if (TVA_Player.url.match(/\.ism/i) || TVA_Player.url.match(/\/manifest/i)) {
-                            k = "application/vnd.ms-sstr+xml"
-                        } else {
-                            if (TVA_Player.url.match(/\.mp4/i)) {
-                                k = "video/mp4"
-                            } else {
-                                if (TVA_Player.url.match(/\.mov/i)) {
-                                    k = "video/mp4"
-                                } else {
-                                    if (TVA_Player.url.match(/\.mp3/i)) {
-                                        k = "audio/mpeg"
-                                    } else {
-                                        if (TVA_Player.url.match(/\.mpd/i)) {
-                                            k = "application/dash+xml"
-                                        } else {
-                                            k = TVA_Player.defaultMIMEVid
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    k = TVA_Player.MIMEType
-                }
-                if (h.effect3D != null) {
-                    TVA_Player.set3DMode(h.effect3D)
-                } else {
-                    TVA_Player.active3DMode = TVA_Player.mode3D.Off
-                }
-                if (TVA_Player.avMode === 1) {
-                    TVA_Player.active3DMode = TVA_Player.mode3D.Off
-                }
-                var n = null;
-                var l = document.createElement("source");
-
-                function m() {
-                    if (!n) {
-                        n = {}
-                    }
-                    if (!n.option) {
-                        n.option = {}
-                    }
-                }
-
-                if (h != null && h.drm != null) {
-                    m();
-                    n.mediaTransportType = h.drm.mediaTransportType;
-                    n.option = h.drm.option
-                }
-                if (TVA_Player.active3DMode !== TVA_Player.mode3D.Off) {
-                    m();
-                    n.option["3dMode"] = TVA_Player.active3DMode
-                }
-                if (h.startTime) {
-                    m();
-                    if (!n.option.transmission) {
-                        n.option.transmission = {}
-                    }
-                    n.option.transmission.playTime = {start: h.startTime * 1000}
-                }
-                if (h.adaptiveStreaming) {
-                    m();
-                    if (!n.option.adaptiveStreaming) {
-                        n.option.adaptiveStreaming = h.adaptiveStreaming
-                    }
-                }
-                if (n != null) {
-                    k += ";mediaOption=" + encodeURIComponent(JSON.stringify(n));
-                    TVA.log("mediaOption: " + JSON.stringify(n))
-                }
-                l.type = k;
-                l.src = TVA_Player.url;
-                TVA_Player.sourceError = false;
-                TVA_Player.ignoreNextConnection = false;
-                TVA_Player.bitrate = 0;
-                TVA_Player.videoDecoded = {byteCount: 0, time: 0};
-                l.addEventListener("error", TVA_Player.onError);
-                var g = TVA_Player.player.getElementsByTagName("source");
-                for (var j = 0; j < g.length; j++) {
-                    g[j].parentNode.removeChild(g[j])
-                }
-                TVA_Player.player.appendChild(l)
+            TVA_Player._logException = function (webAPIExeption) {
+                TVA.log("webAPIException");
+                TVA.log("message: " + webAPIExeption.message);
+                TVA.log("name: " + webAPIExeption.name);
+                TVA.log("code: " + webAPIExeption.code)
+            };
+            TVA_Player._logSuccess = function (e) {
+                TVA.log("PLAYER_EVT: success" + e)
+            };
+            TVA_Player._close = function () {
+                TVA_Player.player.close();
+                TVA_Player.opened = false
             };
             TVA_Player.readyVideo = function () {
-                TVA_Player.clearPlayer();
-                var h = document.createElement("video");
-                h.setAttribute("id", "HTML5Player");
-                h.setAttribute("preload", "none");
-                var g = document.getElementById("TVA_PlayerBox");
-                g.appendChild(h);
-                TVA_Player.player = document.getElementById("HTML5Player");
                 TVA_Player.setHeight(TVA_Player.height);
                 TVA_Player.setWidth(TVA_Player.width);
                 TVA_Player.setXY(TVA_Player.xPosition, TVA_Player.yPosition);
                 TVA_Player.avMode = 0;
-                a()
+                TVA_Player.pauseFix = false
             };
             TVA_Player.readyAudio = function () {
-                TVA_Player.clearPlayer();
-                var h = document.createElement("audio");
-                h.setAttribute("id", "HTML5Player");
-                h.setAttribute("preload", "none");
-                var g = document.getElementById("TVA_PlayerBox");
-                g.appendChild(h);
-                TVA_Player.player = document.getElementById("HTML5Player");
-                TVA_Player.setHeight(0);
-                TVA_Player.setWidth(0);
-                TVA_Player.setXY(0, 0);
+                TVA_Player.hide();
                 TVA_Player.avMode = 1;
-                TVA_Player.player.addEventListener("canplay", TVA_Player.onCanPlay);
-                TVA_Player.player.addEventListener("play", TVA_Player.onPlay);
-                TVA_Player.player.addEventListener("playing", TVA_Player.onPlaying);
-                TVA_Player.player.addEventListener("pause", TVA_Player.onPause);
-                TVA_Player.player.addEventListener("waiting", TVA_Player.onBuffering);
-                TVA_Player.player.addEventListener("timeupdate", TVA_Player.onPlayHeadChanged);
-                TVA_Player.player.addEventListener("progress", TVA_Player.onBufferProgress);
-                TVA_Player.player.addEventListener("ended", TVA_Player.onEnded);
-                TVA_Player.player.addEventListener("error", TVA_Player.onError);
-                TVA_Player.player.addEventListener("seeking", TVA_Player.onSeeking);
-                TVA_Player.player.addEventListener("seeked", TVA_Player.onSeeked);
-                TVA_Player.player.addEventListener("loadstart", TVA_Player.onConnecting);
-                TVA_Player.player.addEventListener("loadeddata", TVA_Player.onConnectingEnds)
+                TVA_Player.pauseFix = false
             };
-            TVA_Player.setXY = function (h, g) {
-                TVA_Player.xPosition = h;
-                TVA_Player.yPosition = g;
-                TVA_Player.player.style.position = "absolute";
-                TVA_Player.player.style.left = h + "px";
-                TVA_Player.player.style.top = g + "px";
-                return true
+            TVA_Player.setXY = function (xVal, yVal) {
+                TVA_Player.xPosition = xVal;
+                TVA_Player.yPosition = yVal;
+                if (TVA_Player.mode == TVA_Player.state.paused) {
+                    TVA_Player.pauseFix = true
+                }
+                TVA_Player._updateRect()
+            };
+            TVA_Player._updateRect = function () {
+                TVA_Player.rect = {};
+                var setRect = function () {
+                    TVA_Player.rect = {
+                        top: Math.round(TVA_Player.yPosition / window.innerHeight * screen.height),
+                        left: Math.round(TVA_Player.xPosition / window.innerWidth * screen.width),
+                        width: Math.round(TVA_Player.width / window.innerWidth * screen.width),
+                        height: Math.round(TVA_Player.height / window.innerHeight * screen.height)
+                    }
+                };
+                if (window.innerHeight >= 1080) {
+                    TVA.log("Viewport not ready, delaying setRect");
+                    setTimeout(setRect, 500)
+                } else {
+                    setRect()
+                }
+                if (TVA_Player.objectPlayer) {
+                    TVA_Player.objectPlayer.css({
+                        position: "absolute",
+                        left: TVA_Player.xPosition,
+                        top: TVA_Player.yPosition,
+                        width: TVA_Player.width,
+                        height: TVA_Player.height,
+                        "z-index": TVA_Player.zindex
+                    })
+                }
+                if (TVA_Player.player && TVA_Player.opened) {
+                    TVA_Player.player.setDisplayRect(TVA_Player.rect.left, TVA_Player.rect.top, TVA_Player.rect.width, TVA_Player.rect.height)
+                }
             };
             TVA_Player.getWidth = function () {
-                return TVA_Player.player.width
+                return TVA_Player.width
             };
-            TVA_Player.setWidth = function (g) {
-                TVA_Player.width = g;
-                TVA_Player.player.width = g;
-                return true
+            TVA_Player.setWidth = function (newWidth) {
+                TVA_Player.width = newWidth;
+                if (TVA_Player.mode == TVA_Player.state.paused) {
+                    TVA_Player.pauseFix = true
+                }
+                TVA_Player._updateRect()
             };
             TVA_Player.getHeight = function () {
-                return TVA_Player.player.height
+                return TVA_Player.height
             };
-            TVA_Player.setHeight = function (g) {
-                TVA_Player.height = g;
-                TVA_Player.player.height = g;
-                return true
+            TVA_Player.setHeight = function (newHeight) {
+                TVA_Player.height = newHeight;
+                if (TVA_Player.mode == TVA_Player.state.paused) {
+                    TVA_Player.pauseFix = true
+                }
+                TVA_Player._updateRect()
             };
-            TVA_Player.setAspectRatio = function (g) {
+            TVA_Player.setAspectRatio = function (aspectRatio) {
+                var newHeight = TVA_Player.height;
+                var newWidth = TVA_Player.width;
+                var newX = TVA_Player.xPosition;
+                var newY = TVA_Player.yPosition;
+                var ARbox = (TVA_Player.width / TVA_Player.height);
+                var AR = eval(aspectRatio);
+                TVA.log("AR=" + AR);
+                if (!isNaN(AR)) {
+                    TVA.log("isNumber");
+                    if (ARbox > AR) {
+                        if ("4/3" == aspectRatio) {
+                            newWidth = Math.round((newHeight / 3) * 4)
+                        } else {
+                            if ("16/9" == aspectRatio) {
+                                newWidth = Math.round((newHeight / 9) * 16)
+                            }
+                        }
+                        newX = newX + ((TVA_Player.width - newWidth) / 2)
+                    } else {
+                        if (ARbox < AR) {
+                            if ("4/3" == aspectRatio) {
+                                newHeight = Math.round((newWidth / 4) * 3)
+                            } else {
+                                if ("16/9" == aspectRatio) {
+                                    newHeight = Math.round((newWidth / 16) * 9)
+                                }
+                            }
+                            newY = newY + ((TVA_Player.height - newHeight) / 2)
+                        }
+                    }
+                    TVA_Player._updateRect()
+                }
             };
             TVA_Player.hide = function () {
                 TVA_Player.active = false;
-                var g = document.getElementById("TVA_PlayerBox");
-                var h = document.getElementById("HTML5Player");
-                h.style.display = "none";
-                g.style.display = "none"
+                if (TVA_Player.opened) {
+                    TVA_Player.player.setDisplayRect(0, 0, 0, 0)
+                }
+                if (TVA_Player.objectPlayer) {
+                    TVA_Player.objectPlayer.css({position: "absolute", left: 0, top: 0, width: 0, height: 0, "z-index": TVA_Player.zindex})
+                }
+                return
             };
             TVA_Player.show = function () {
-                var g = document.getElementById("TVA_PlayerBox");
-                var h = document.getElementById("HTML5Player");
-                g.style.display = "block";
-                h.style.display = "block";
-                TVA_Player.active = true
+                if (TVA_Player.mode == TVA_Player.state.paused) {
+                    TVA_Player.pauseFix = true
+                }
+                TVA_Player._updateRect();
+                TVA_Player.active = true;
+                return
             };
             TVA_Player.getURL = function () {
                 return TVA_Player.url
             };
-            TVA_Player.setURL = function (g) {
-                TVA_Player.url = g;
+            TVA_Player.setURL = function (url) {
+                TVA_Player.pauseFix = false;
+                TVA_Player.url = url;
                 return true
             };
-            TVA_Player.play = function (g) {
+            TVA_Player.play = function (options) {
                 if (TVA_Player.autoRecover) {
                     TVA_Player.autoRecover.autoRecoverPlay = false
                 }
-                if (g == null) {
-                    g = {}
+                TVA_Player.errorHappened = false;
+                TVA_Player.storedError = null;
+                TVA_Player.preBufferMode = 3;
+                TVA_Player.playStateChange(3);
+                if (typeof options === "undefined" || !options) {
+                    options = {}
                 }
-                if (TVA_Player.player) {
-                    TVA_Player.resetFFRWSpeed();
-                    TVA_Player.prepareSource(g);
-                    TVA_Player.canPlay = false;
-                    TVA.log("startTime: " + g.startTime);
-                    if (g.startTime != null) {
-                        TVA.log("Startime option enabled.");
-                        TVA_Player.startTime = g.startTime
-                    } else {
-                        TVA_Player.startTime = 0
-                    }
-                    TVA_Player.fakeSeconds = TVA_Player.startTime;
-                    TVA_Player.player.load();
-                    TVA_Player.player.play();
-                    return true
-                }
-                return false
-            };
-            TVA_Player.stop = function () {
-                TVA_Player.resetFFRWSpeed();
-                if (TVA_Player.player) {
-                    var g = TVA_Player.player.getElementsByTagName("source");
-                    for (var h = 0; h < g.length; h++) {
-                        g[h].parentNode.removeChild(g[h])
-                    }
-                    TVA_Player.player.load();
-                    if (TVA_Player.player.currentTime != 0) {
-                        TVA_Player.player.currentTime = 0
-                    }
-                    TVA_Player.playpos = 0;
-                    TVA_Player.ignoreNextConnection = true;
-                    TVA_Player.canPlay = false;
-                    TVA_Player.mode = 0;
-                    TVA_Player.onPlayHeadChanged();
-                    TVA_Player.onPlayStateChange();
-                    return true
-                }
-                return false
-            };
-            TVA_Player.pause = function (g) {
-                if (!TVA_Player.canPlay) {
-                    return false
-                }
-                if (TVA_Player.mode == 0 || TVA_Player.mode >= 5) {
-                    return false
-                }
-                TVA_Player.resetFFRWSpeed();
-                if (g) {
-                    if (TVA_Player.mode != 2) {
-                        TVA_Player.player.pause()
-                    }
+                if (options.startTime) {
+                    TVA_Player.playPos = options.startTime
                 } else {
-                    if (TVA_Player.mode != 1) {
+                    TVA_Player.playPos = 0
+                }
+                TVA_Player.fakeSeconds = TVA_Player.playPos;
+                if (!options.opened) {
+                    if (TVA_Player.player.getState() !== "NONE") {
+                        TVA_Player.player.close()
+                    }
+                    TVA_Player.player.open(TVA_Player.url, TVA_Player._logSuccess, TVA_Player._logException)
+                }
+                TVA_Player.opened = true;
+                if (TVA_Player.avMode == 0) {
+                    TVA_Player._updateRect()
+                }
+                _isLive = TVA_Player.url.match(/\.isml/i);
+                if (_lastSuspendHandler != null) {
+                    document.removeEventListener("visibilitychange", _lastSuspendHandler)
+                }
+                _lastSuspendHandler = suspendHandler;
+                document.addEventListener("visibilitychange", _lastSuspendHandler);
+                if (options.uhd === true) {
+                    TVA.log("SET UHD MODE ON");
+                    TVA_Player.player.setStreamingProperty("SET_MODE_4K", "TRUE")
+                }
+                if (options.adaptive_info && parseInt(TVA.year) >= 2016) {
+                    TVA.log("SET CUSTOM ADAPTIVE STREAM INFO");
+                    var str = "";
+                    TVA.log("BITRATES: " + options.adaptive_info.bitrates);
+                    TVA.log("STARTBITRATE: " + options.adaptive_info.start_bitrate);
+                    TVA.log("SKIPBITRATE: " + options.adaptive_info.skip_bitrate);
+                    if (options.adaptive_info.bitrates) {
+                        str += ("BITRATES=" + options.adaptive_info.bitrates + "|")
+                    }
+                    if (options.adaptive_info.start_bitrate) {
+                        str += ("STARTBITRATE=" + options.adaptive_info.start_bitrate + "|")
+                    }
+                    if (options.adaptive_info.skip_bitrate) {
+                        str += ("SKIPBITRATE=" + options.adaptive_info.skip_bitrate + "|")
+                    }
+                    str = str.substring(0, str.length - 1);
+                    TVA.log("complete Adaptive string: " + str);
+                    TVA.log("setting adaptive info");
+                    TVA_Player.player.setStreamingProperty("ADAPTIVE_INFO", str)
+                } else {
+                    if (options.adaptive_info && parseInt(TVA.year) < 2016) {
+                    }
+                }
+
+                function suspendHandler() {
+                    if (!TVA_Player.player) {
+                        return
+                    }
+                    TVA.log("Visibility change");
+                    var playerState = TVA_Player.getState();
+                    var playerInternalState = TVA_Player.player.getState();
+                    var resumePlaying = !(playerState == TVA_Player.state.stopped || playerState == TVA_Player.state.error || playerState == TVA_Player.state.finished);
+                    TVA.log("Player isPlaying: " + resumePlaying);
+                    if (resumePlaying) {
+                        var avp = TVA_Player.player;
+                        if (document.hidden) {
+                            if (playerInternalState === "PLAYING" || playerInternalState === "PAUSED") {
+                                TVA.log("Suspending player");
+                                _lastSuspendTime = Math.floor(avp.getCurrentTime() / 1000) * 1000;
+                                TVA_Player.beforeSuspendCallback && TVA_Player.beforeSuspendCallback();
+                                avp.suspend()
+                            } else {
+                                TVA.log("Stopping player");
+                                TVA_Player.playStateChange(5);
+                                TVA_Player.stop()
+                            }
+                        } else {
+                            TVA.log("Restore player: " + _lastSuspendTime);
+                            var restorePoint = 0;
+                            if (!TVA_Player.simulateSeconds) {
+                                restorePoint = _lastSuspendTime
+                            } else {
+                                restorePoint = TVA_Player.fakeSeconds * 1000
+                            }
+                            if (TVA_Player.beforeRestoreCallback) {
+                                TVA_Player.beforeRestoreCallback(function () {
+                                    avp.restore(TVA_Player.url, restorePoint, false)
+                                })
+                            } else {
+                                avp.restore(TVA_Player.url, restorePoint, false)
+                            }
+                            if (options.drm) {
+                                avp.setDrm("", "", "")
+                            }
+                        }
+                    }
+                }
+
+                function playVideo() {
+                    if (options.startTime) {
+                        TVA.log("** START TIME: " + options.startTime);
+                        TVA_Player.player.seekTo(parseInt(options.startTime) * 1000, function () {
+                            TVA_Player.player.play()
+                        }, function () {
+                            TVA.log("** STARTING OFFSET ERROR")
+                        })
+                    } else {
                         TVA_Player.player.play()
                     }
                 }
-                return true
+
+                TVA.log("**PREPARE ASYNC");
+                TVA_Player.beforePrepareCallback && TVA_Player.beforePrepareCallback();
+                TVA_Player.player.prepareAsync(playVideo)
             };
-            TVA_Player.forward = function (h) {
-                if (!TVA_Player.canPlay) {
-                    return false
-                }
-                if (TVA_Player.skipDirection != "Forward" || !TVA_Player.lastFFRW) {
-                    TVA_Player.lastFFRW = new Date(0);
-                    TVA_Player.skipDirection = "Forward"
-                }
-                if (!h) {
-                    TVA_Player.speedCalculation();
-                    h = TVA_Player.skipTime()
-                }
-                var g = TVA_Player.player.currentTime + h > TVA_Player.getLength() ? TVA_Player.getLength() : TVA_Player.player.currentTime + h;
-                TVA_Player.seek(g);
-                if (TVA_Player.simulateSeconds) {
-                    TVA_Player.fakeSeconds += g
-                }
-                return true
-            };
-            TVA_Player.backward = function (h) {
-                if (!TVA_Player.canPlay) {
-                    return false
-                }
-                if (TVA_Player.skipDirection != "Backward" || !TVA_Player.lastFFRW) {
-                    TVA_Player.lastFFRW = new Date(0);
-                    TVA_Player.skipDirection = "Backward"
-                }
-                if (!h) {
-                    TVA_Player.speedCalculation();
-                    h = TVA_Player.skipTime()
-                }
-                var g = TVA_Player.player.currentTime - h < 0 ? 0 : TVA_Player.player.currentTime - h;
-                TVA_Player.seek(g);
-                if (TVA_Player.simulateSeconds) {
-                    TVA_Player.fakeSeconds -= g
-                }
-                return true
-            };
-            TVA_Player.speedCalculation = function () {
-                var g = new Date();
-                TVA_Player.FFRWSpeed = Math.floor(TVA_Player.keyRepetition / (g.getTime() - TVA_Player.lastFFRW.getTime()));
-                TVA_Player.lastFFRW = g;
-                if (TVA_Player.FFRWSpeed < 1) {
-                    TVA_Player.FFRWSpeed = 1
-                }
-                if (TVA_Player.FFRWSpeed > TVA_Player.maxFFRWSpeed) {
-                    TVA_Player.FFRWSpeed = TVA_Player.maxFFRWSpeed
-                }
-                TVA.log("FFRW Speed = " + TVA_Player.FFRWSpeed)
-            };
-            TVA_Player.seek = function (g) {
-                TVA_Player.player.currentTime = g
-            };
-            TVA_Player.resetFFRWSpeed = function () {
-                TVA_Player.FFRWSpeed = 0;
-                clearTimeout(TVA_Player.resetFFRWSpeedTimeout)
-            };
-            TVA_Player.skipTime = function () {
-                var g = Math.floor(TVA_Player.getLength() / 100);
-                if (g < TVA_Player.defaultSkip) {
-                    g = TVA_Player.defaultSkip * TVA_Player.FFRWSpeed
-                } else {
-                    g = g * TVA_Player.FFRWSpeed
-                }
-                if (g > TVA_Player.maxAllowedSkipTime) {
-                    g = TVA_Player.maxAllowedSkipTime
-                }
-                TVA.log("Skip Time = " + g);
-                return g
-            };
-            TVA_Player.onCanPlay = function () {
-                TVA.log("oncanPlay");
-                TVA_Player.canPlay = true
-            };
-            TVA_Player.onPlay = function () {
-                TVA.log("onPlay")
-            };
-            TVA_Player.onPlaying = function () {
-                TVA.log("onPlaying");
-                TVA_Player.mode = 1;
-                TVA_Player.onPlayStateChange()
-            };
-            TVA_Player.onPause = function () {
-                TVA.log("onPause");
-                if (TVA_Player.canPlay === false) {
-                    TVA_Player.player.play();
+            TVA_Player.stop = function () {
+                if (!TVA_Player.opened) {
+                    TVA.log("STOP called on closed player, returning.");
                     return
                 }
-                if (TVA_Player.mode != 0) {
-                    TVA_Player.mode = 2
-                }
-                TVA_Player.onPlayStateChange()
-            };
-            TVA_Player.onPlayHeadChanged = function () {
-                if (TVA_Player.player.currentTime - TVA_Player.videoDecoded.time > 0) {
-                    TVA_Player.bitrate = parseInt(((TVA_Player.player.webkitVideoDecodedByteCount - TVA_Player.videoDecoded.byteCount) / (TVA_Player.player.currentTime - TVA_Player.videoDecoded.time)) * 8);
-                    TVA_Player.videoDecoded = {byteCount: TVA_Player.player.webkitVideoDecodedByteCount, time: TVA_Player.player.currentTime}
-                }
-                if (TVA_Player.simulateSeconds) {
-                    return
-                }
-                TVA_Player.playPos = TVA_Player.getCurrentTime();
-                TVA_Player.autoRecoverCheck();
+                TVA_Player.playStateChange(0);
                 if (typeof playHeadChanged == "function") {
+                    playHeadChanged(0)
+                }
+                TVA_Player.player.stop();
+                TVA_Player._close()
+            };
+            TVA_Player.pause = function (toggle) {
+                if (TVA_Player._seeking || (TVA_Player.mode != 1 && TVA_Player.mode != 2)) {
+                    TVA.log("Cannot pause from state: " + TVA_Player.mode);
+                    return
+                }
+                if (toggle && TVA_Player._seekLocked) {
+                    TVA.log("** CANNOT PAUSE WHILE SEEKING");
+                    return
+                }
+                if (typeof toggle == "undefined") {
+                    TVA.log("** toggle undefined");
+                    if (TVA_Player.mode != TVA_Player.state.playing) {
+                        toggle = false
+                    }
+                }
+                TVA.log("** PAUSE CALLED");
+                TVA.log("** Toggle : " + toggle);
+                if (toggle) {
+                    TVA.log("** Toggle valid");
+                    TVA_Player.player.pause();
+                    TVA_Player.playStateChange(2);
+                    return true
+                } else {
+                    TVA.log("** Toggle false or undefined");
+                    if (TVA_Player.mode != 1) {
+                        TVA.log("** UNPAUSE from state: " + TVA_Player.getState());
+                        TVA_Player.player.play();
+                        TVA_Player.playStateChange(1);
+                        return true
+                    }
+                }
+            };
+            TVA_Player.backward = function (offset) {
+                TVA_Player._seek(TVA_Player._REWIND, offset)
+            };
+            TVA_Player.forward = function (offset) {
+                TVA_Player._seek(TVA_Player._FORWARD, offset)
+            };
+            TVA_Player._seek = function (dir, offset) {
+                if (!offset) {
+                    offset = TVA_Player.defaultSkip
+                }
+                if (TVA_Player._seekLocked) {
+                    TVA.log("Seek locked from a previous seek");
+                    return
+                }
+                if (TVA_Player.getState() == TVA_Player.state.buffering) {
+                    TVA.log("Seek locked while buffering");
+                    return
+                }
+                if (dir == null || dir == 0 || (dir != TVA_Player._REWIND && dir != TVA_Player._FORWARD)) {
+                    TVA.log("invalid seek type");
+                    return
+                }
+                clearTimeout(TVA_Player._seekTimer);
+                clearTimeout(TVA_Player._seekLockTimer);
+                if (TVA_Player.getState() == TVA_Player.state.playing) {
+                    TVA.log("** SEEK FROM PLAYING STATE, PAUSING.");
+                    TVA_Player._seekFromPlaying = true;
+                    TVA_Player.pause(true)
+                }
+                if (dir == TVA_Player._FORWARD && (TVA_Player.playPos + offset) >= (TVA_Player.getLength() - 1)) {
+                    TVA.log("** FWD to the end.");
+                    offset = TVA_Player.getLength() - 1 - TVA_Player.playPos
+                } else {
+                    if (dir == TVA_Player._REWIND && (TVA_Player.playPos - offset) <= 0) {
+                        TVA.log("** RW to 0");
+                        offset = TVA_Player.playPos - 1
+                    }
+                }
+                if (dir == TVA_Player._FORWARD) {
+                    TVA_Player.playPos += offset;
+                    if (typeof playHeadChanged == "function") {
+                        playHeadChanged(TVA_Player.playPos)
+                    }
+                } else {
+                    if (dir == TVA_Player._REWIND) {
+                        TVA_Player.playPos -= offset;
+                        if (typeof playHeadChanged == "function") {
+                            playHeadChanged(TVA_Player.playPos)
+                        }
+                    }
+                }
+                TVA_Player._seekTimer = setTimeout(function () {
+                    TVA_Player._seeking = false;
+                    TVA_Player._seekLocked = true;
+                    TVA_Player.player.seekTo(TVA_Player.playPos * 1000);
+                    if (TVA_Player._seekFromPlaying) {
+                        TVA_Player.pause(false);
+                        TVA_Player._seekFromPlaying = false
+                    }
+                }, 500);
+                TVA_Player._seekLockTimer = setTimeout(function () {
+                    TVA.log("** TIMER CLEARING SEEK LOCK");
+                    TVA_Player._seekLocked = false
+                }, TVA_Player._seekLockDuration);
+                return true
+            };
+            TVA_Player.renderingComplete = function () {
+                TVA.log("RENDERING COMPLETE");
+                var duration = TVA_Player.getLength();
+                var currentTime = TVA_Player.playPos;
+                if (duration > 0 && (duration - currentTime) > 5) {
+                    TVA_Player.onError(2);
+                    return
+                } else {
+                    TVA_Player.playStateChange(5)
+                }
+            };
+            TVA_Player.bufferingStart = function () {
+                TVA.log("bufferingStart");
+                if (TVA_Player.mode != 4) {
+                    TVA_Player.preBufferMode = TVA_Player.mode;
+                    TVA_Player.playStateChange(4)
+                }
+            };
+            TVA_Player.bufferingComplete = function () {
+                TVA.log("bufferingComplete");
+                if (TVA_Player._seekLocked) {
+                    TVA.log("** CLEARING SEEK LOCK");
+                    TVA_Player._seekLocked = false
+                }
+                TVA_Player.playStateChange(TVA_Player.preBufferMode);
+                if (TVA_Player.opened && typeof playHeadChanged == "function") {
+                    TVA_Player.playPos = Math.floor(TVA_Player.player.getCurrentTime() / 1000);
                     playHeadChanged(TVA_Player.playPos)
                 }
+                return
             };
-            TVA_Player.onEnded = function () {
-                TVA_Player.mode = 5;
-                TVA_Player.onPlayStateChange()
+            TVA_Player.onBufferingProgress = function (bufferProgress) {
+                if (TVA_Player.mode != 4) {
+                    TVA_Player.preBufferMode = TVA_Player.mode;
+                    TVA_Player.playStateChange(4)
+                }
+                if (typeof bufferingProgress == "function") {
+                    bufferingProgress(bufferProgress)
+                }
             };
-            TVA_Player.onSeeking = function () {
-                TVA_Player.onBuffering();
-                TVA.log("onSeeking")
-            };
-            TVA_Player.onSeeked = function () {
-                if (TVA_Player.player.paused) {
-                    TVA_Player.onPause()
+            TVA_Player.playStateChange = function (newState) {
+                TVA.log("Change state from " + TVA_Player.mode + " to " + newState + ", opened: " + TVA_Player.opened);
+                TVA_Player.mode = newState;
+                if (TVA_Player.player.getState() === "PLAYING") {
+                    webapis.appcommon.setScreenSaver(webapis.appcommon.AppCommonScreenSaverState.SCREEN_SAVER_OFF)
                 } else {
-                    TVA_Player.onPlaying()
+                    webapis.appcommon.setScreenSaver(webapis.appcommon.AppCommonScreenSaverState.SCREEN_SAVER_ON)
                 }
-                TVA.log("onSeeked");
-                if (typeof TVA_Player.onSeekedCallback == "function") {
-                    TVA_Player.onSeekedCallback();
-                    TVA_Player.onSeekedCallback = null
-                }
-            };
-            TVA_Player.onConnecting = function () {
-                if (TVA_Player.ignoreNextConnection) {
-                    TVA_Player.ignoreNextConnection = false;
-                    return
-                }
-                TVA.log("onConnecting");
-                TVA_Player.mode = 3;
-                TVA_Player.onPlayStateChange()
-            };
-            TVA_Player.onConnectingEnds = function () {
-                TVA.log("onConnectingEnds")
-            };
-            TVA_Player.onPlayStateChange = function () {
-                TVA_Player.previousMode = TVA_Player.mode;
                 if (typeof playStateChanged == "function") {
-                    playStateChanged(TVA_Player.mode)
+                    playStateChanged(newState)
+                }
+                if (newState === 6 && typeof playError == "function") {
+                    playError(TVA_Player.getErrorType())
+                }
+                if (newState != 2) {
+                    TVA_Player.pauseFix = false
                 }
                 if (TVA_Player.defaultLoading) {
-                    var i;
                     if (document.getElementById("loading_logo")) {
-                        i = document.getElementById("loading_logo")
+                        var loading = document.getElementById("loading_logo")
                     } else {
-                        i = document.createElement("img");
-                        i.setAttribute("id", "loading_logo");
-                        i.setAttribute("src", "TVA/images/loading.png");
-                        i.style.position = "absolute";
-                        i.style.zIndex = "99999";
-                        var h = TVA_Player.yPosition + TVA_Player.height / 2 - 92;
-                        var g = TVA_Player.xPosition + TVA_Player.width / 2 - 100;
-                        i.style.top = h + "px";
-                        i.style.left = g + "px";
-                        document.getElementById("body").appendChild(i)
+                        var loading = document.createElement("img");
+                        ok;
+                        loading.setAttribute("id", "loading_logo");
+                        loading.setAttribute("src", "TVA/images/loading.png");
+                        loading.style.position = "absolute";
+                        loading.style.zIndex = "99999";
+                        document.getElementById("body").appendChild(loading)
                     }
                     if (TVA_Player.mode == 3 || TVA_Player.mode == 4) {
-                        i.style.display = "block"
+                        var top = TVA_Player.yPosition + TVA_Player.height / 2 - 92;
+                        var left = TVA_Player.xPosition + TVA_Player.width / 2 - 100;
+                        loading.style.top = top + "px";
+                        loading.style.left = left + "px";
+                        loading.style.display = "block"
                     } else {
-                        i.style.display = "none"
+                        loading.style.display = "none"
                     }
                 }
                 if (TVA_Player.simulateSeconds) {
@@ -4239,82 +3376,57 @@
                     }
                 }
             };
-            TVA_Player.onError = function (g) {
-                if (g.target.localName == "source") {
-                    TVA_Player.sourceError = true
-                }
-                if (TVA_Player.autoRecoverProcess()) {
-                    return
-                }
-                TVA_Player.mode = 6;
-                TVA.log("ON ERROR");
-                if (typeof playError == "function") {
-                    playError(TVA_Player.getErrorType())
-                }
-                TVA_Player.onPlayStateChange()
-            };
-            TVA_Player.getErrorType = function () {
-                var g = {};
-                if (!TVA_Player.sourceError && TVA_Player.player && TVA_Player.player.error && TVA_Player.player.error.code) {
-                    switch (TVA_Player.player.error.code) {
-                        case TVA_Player.player.error.MEDIA_ERR_ABORTED:
-                            g = {id: "MEDIA_ERR_ABORTED", message: "You aborted the video playback."};
-                            break;
-                        case TVA_Player.player.error.MEDIA_ERR_NETWORK:
-                            g = {id: "MEDIA_ERR_NETWORK", message: "A network error caused the video download to fail part-way."};
-                            break;
-                        case TVA_Player.player.error.MEDIA_ERR_DECODE:
-                            g = {id: "MEDIA_ERR_DECODE", message: "The video playback was aborted due to a corruption problem or because the video used features your browser did not support."};
-                            break;
-                        case TVA_Player.player.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
-                            g = {id: "MEDIA_ERR_SRC_NOT_SUPPORTED", message: "The video could not be loaded, either because the server or network failed or because the format is not supported."};
-                            break;
-                        default:
-                            g = {id: "UNKNOWN_ERROR", message: "Player reports error but error type is not identified."};
-                            break
-                    }
-                } else {
-                    g = {id: "MEDIA_ERR_SRC_NOT_SUPPORTED", message: "The video could not be loaded, either because the server or network failed or because the format is not supported."}
-                }
-                return g
-            };
-            TVA_Player.getBitrate = function () {
-                return TVA_Player.bitrate
-            };
-            TVA_Player.onBufferProgress = function () {
+            TVA_Player.onError = function (error) {
                 try {
-                    var g = TVA_Player.player.buffered.end(0);
-                    var h = 100 * g / TVA_Player.getLength();
-                    if (typeof bufferingProgress == "function") {
-                        bufferingProgress(h)
+                    TVA.log("Error: " + error);
+                    TVA.log("URL: " + TVA_Player.getURL());
+                    TVA_Player.storedError = error;
+                    if (TVA_Player.autoRecoverProcess()) {
+                        return
                     }
-                } catch (i) {
-                    if (typeof bufferingProgress == "function") {
-                        bufferingProgress("not available")
-                    }
+                    TVA_Player.errorHappened = true;
+                    TVA_Player.playStateChange(6);
+                    TVA_Player.player.stop()
+                } catch (e) {
                 }
-            };
-            TVA_Player.onBuffering = function () {
-                TVA.log("onWaiting");
-                TVA_Player.mode = 4;
-                TVA_Player.onPlayStateChange()
-            };
-            TVA_Player.getCurrentTime = function () {
-                try {
-                    if (TVA_Player.simulateSeconds) {
-                        return TVA_Player.fakeSeconds
-                    }
-                    return Math.floor(TVA_Player.player.currentTime)
-                } catch (g) {
-                }
-                return null
             };
             TVA_Player.getLength = function () {
                 try {
-                    return Math.floor(TVA_Player.player.duration)
-                } catch (g) {
+                    return Math.floor(TVA_Player.player.getDuration() / 1000)
+                } catch (e) {
+                    TVA.log("getLength error: " + JSON.stringify(e))
                 }
                 return null
+            };
+            TVA_Player.getCurrentTime = function () {
+                if (TVA_Player.simulateSeconds) {
+                    return TVA_Player.fakeSeconds
+                }
+                return Math.floor(TVA_Player.playPos)
+            };
+            TVA_Player.setCurrentTime = function (time) {
+                if (TVA_Player.mode >= 3 && TVA_Player.mode != 5) {
+                    TVA_Player.playStateChange(1)
+                }
+                if (TVA_Player.pauseFix) {
+                    TVA_Player.player.pause();
+                    TVA_Player.pauseFix = false
+                }
+                var seconds = Math.floor(time / 1000);
+                if (TVA_Player.simulateSeconds) {
+                    return
+                }
+                if (TVA_Player.playPos != seconds) {
+                    TVA_Player.playPos = seconds;
+                    TVA_Player.autoRecoverCheck();
+                    if (typeof playHeadChanged == "function") {
+                        playHeadChanged(seconds)
+                    }
+                    if (!_isLive && TVA_Player.prepareAsync && TVA_Player.playPos >= (TVA_Player.getLength() - 1)) {
+                        TVA.log("** END REACHED");
+                        TVA_Player.renderingComplete()
+                    }
+                }
             };
             TVA_Player.getAVState = function () {
                 return TVA_Player.avMode
@@ -4323,29 +3435,68 @@
                 return TVA_Player.mode
             };
             TVA_Player.deinit = function () {
-                TVA_Player.clearPlayer()
+                if (!TVA_Player.started) {
+                    return
+                }
+                if (TVA_Player.player) {
+                    try {
+                        TVA_Player.player.stop()
+                    } catch (e) {
+                    }
+                    try {
+                        TVA_Player.player.close()
+                    } catch (e) {
+                    }
+                    try {
+                        TVA_Player.player.destroy()
+                    } catch (e) {
+                    }
+                    TVA_Player.player = null
+                }
+                if (TVA_Player.objectPlayer && TVA_Player.objectPlayer.remove) {
+                    TVA_Player.objectPlayer.remove()
+                }
+                if (document.getElementById("TVA_PlayerBox")) {
+                    document.getElementById("TVA_PlayerBox").remove();
+                    TVA_Player.objectPlayer = null
+                }
+                TVA_Player.started = false
             };
-            TVA_Player.setSimulateSeconds = function (g) {
-                TVA_Player.simulateSeconds = g;
+            TVA_Player.setSimulateSeconds = function (bool) {
+                TVA_Player.simulateSeconds = bool;
                 window.clearInterval(TVA_Player.fakeSecondsInterval)
             };
-            TVA_Player.set3DMode = function (j) {
-                var h = false;
-                for (var g in TVA_Player.mode3D) {
-                    if (TVA_Player.mode3D.hasOwnProperty(g)) {
-                        if (TVA_Player.mode3D[g] === j) {
-                            h = true;
-                            break
-                        }
-                    }
+            TVA_Player.getErrorType = function () {
+                if (typeof TVA_Player.storedError != "undefined") {
+                    return {id: "", message: JSON.stringify(TVA_Player.storedError)}
                 }
-                TVA_Player.active3DMode = (h) ? j : TVA_Player.mode3D.Off
+                return {id: "UNKNOWN_ERROR", message: "Error unknown."}
+            };
+            TVA_Player.getBitrate = function () {
+                if (TVA_Player.player) {
+                    var bitrate = 0;
+                    try {
+                        var streamInfo = TVA_Player.player.getCurrentStreamInfo();
+                        for (track in streamInfo) {
+                            if (streamInfo[track].type === "VIDEO") {
+                                return JSON.parse(streamInfo[0].extra_info).Bit_rate
+                            }
+                        }
+                    } catch (e) {
+                        TVA.log("ERROR GET BITRATE: " + JSON.stringify(e))
+                    }
+                    return bitrate
+                }
+                return 0
+            };
+            TVA_Player.set3DMode = function (mode) {
+                return
             };
             TVA_Player.get3DMode = function () {
-                return TVA_Player.active3DMode
+                return null
             };
             TVA_Player.getSupported3DModes = function () {
-                return TVA_Player.compatible3DModes
+                return null
             };
             TVA_Player.autoRecoverCheck = function () {
                 if (TVA_Player.autoRecover.enable && TVA_Player.playPos > 0) {
@@ -4356,7 +3507,7 @@
                 }
             };
             TVA_Player.autoRecoverProcess = function () {
-                var g = false;
+                var result = false;
                 if (TVA_Player.autoRecover.enable && TVA_Player.autoRecover.attempts > 0) {
                     TVA_Player.mode = 6;
                     if (typeof TVA_NiceAnalytics != "undefined" && TVA_NiceAnalytics.initDone) {
@@ -4366,398 +3517,326 @@
                     TVA_Player.autoRecover.autoRecoverPlay = true;
                     TVA_Player.autoRecover.process();
                     TVA.log("Auto Recover. Attempt: " + TVA_Player.autoRecover.attempts);
-                    g = true
+                    result = true
                 }
-                return g
+                return result
             };
-            TVA_Player.autoRecoverSetup = function (g) {
-                if (typeof g.autoRecover === "object") {
-                    if (typeof g.autoRecover.enable !== "undefined") {
-                        TVA_Player.autoRecover.enable = g.autoRecover.enable
+            TVA_Player.autoRecoverSetup = function (settings) {
+                if (typeof settings.autoRecover === "object") {
+                    if (typeof settings.autoRecover.enable !== "undefined") {
+                        TVA_Player.autoRecover.enable = settings.autoRecover.enable
                     }
-                    if (typeof g.autoRecover.process === "function") {
-                        TVA_Player.autoRecover.process = g.autoRecover.process
+                    if (typeof settings.autoRecover.process === "function") {
+                        TVA_Player.autoRecover.process = settings.autoRecover.process
                     }
-                    if (typeof g.autoRecover.TRY !== "undefined") {
-                        TVA_Player.autoRecover.TRY = g.autoRecover.TRY
+                    if (typeof settings.autoRecover.TRY !== "undefined") {
+                        TVA_Player.autoRecover.TRY = settings.autoRecover.TRY
                     }
                 }
             };
 
-            function c() {
-                if (TVA.systemInfo === null || TVA.systemInfo === undefined) {
-                    return false
-                } else {
-                    return TVA.systemInfo.UHD || false
-                }
+            function _hasProductInfo() {
+                return webapis.productinfo != null
             }
 
-            function e() {
-                return TVA.systemInfo._3d || false
+            function _has4KScreen() {
+                return _hasProductInfo() && webapis.productinfo.isUdPanelSupported()
             }
 
-            function b(g) {
+            function _is3DSupported() {
+                return false
+            }
+
+            function _logInvalidFunction(funName) {
                 if (TVA != null && TVA.log) {
-                    TVA.log('Attempting to use non-supported function "' + g + '". Please check support via the respective TVA_Player.isSupported function call')
+                    TVA.log('Attempting to use non-supported function "' + funName + '". Please check support via the respective TVA_Player.isSupported function call')
                 }
             }
 
-            TVA_Player.isSupported = function (h) {
-                var g = false;
-                switch (h) {
+            TVA_Player.isSupported = function (property) {
+                var ret = false;
+                switch (property) {
                     case"uhd":
-                        g = c();
+                        ret = true;
                         break;
                     case"4k":
-                        g = c();
+                        ret = _has4KScreen();
+                        break;
+                    case"productinfo":
+                        ret = _hasProductInfo();
                         break;
                     case"3d":
-                        g = e();
+                        ret = _is3DSupported();
                         break
                 }
-                return g
+                return ret
             };
-            TVA_Player.is4KSupported = c;
-            TVA_Player.is3Dsupported = e;
+            TVA_Player.is4KSupported = _has4KScreen;
+            TVA_Player.is3Dsupported = _is3DSupported;
             TVA_Player.showQMenu = function () {
-                b("showQMenu")
+                _logInvalidFunction("showQMenu")
             }
         })();
     </script>
     </TVA>
-    <script language="javascript" type="text/javascript">
-        var TVA_Input = {originalValue: "", inputBox: null, inputID: null, langScreen: false};
-        TVA_Input.init = function () {
-        };
-        TVA_Input.setPosition = function () {
-        };
-        TVA_Input.newInput = function (a, b) {
-            TVA.activeInput = true;
-            this.inputBox = document.getElementById(a);
-            this.inputID = a;
-            TVA_Input.originalValue = this.inputBox.value;
-            if (b && b.clear && b.clear == true) {
-                this.inputBox.value = ""
-            }
-            $(TVA_Input.inputBox).addClass("focus");
-            $(TVA_Input.inputBox).focus();
-            if (TVA_Input.originalValue) {
-                this.inputBox.value = TVA_Input.originalValue
-            }
-            TVA.onFocus = TVA_Input.inputID;
-            $(TVA_Input.inputBox).change(function (c) {
-                TVA.log("change");
-                try {
-                    TVA_Input.closeInput();
-                    $(this).unbind(c)
-                } catch (d) {
-                    TVA.log("### " + d.message)
-                }
-                return false
-            });
-            $(TVA_Input.inputBox).unbind("input").bind("input", function (c) {
-                if (typeof onCharacter == "function") {
-                    onCharacter(TVA_Input.inputBox.value)
-                }
-            });
-            $("body").append('<div id="avoidMouseEvents" style="width: 1280px; height:720px; position:absolute; top: 0px; left: 0px; z-index:999;"></div>');
-            $("#avoidMouseEvents").click(function () {
-                TVA_Input.exitInput()
-            })
-        };
-        TVA_Input.isActive = function () {
-            return TVA.activeInput
-        };
-        TVA_Input.clear = function () {
-            TVA_Input.inputBox.value = ""
-        };
-        TVA_Input.set = function (a) {
-            TVA_Input.inputBox.value = a
-        };
-        TVA_Input.processKey = function (a) {
-            switch (a) {
-                case 8:
-                    var c = $(TVA_Input.inputBox);
-                    var b = c.val();
-                    c.val(b.slice(0, -1));
-                    break;
-                case 37:
-                case 38:
-                case 39:
-                case 40:
-                case 13:
-                    TVA_Input.closeInput();
-                    break;
-                default:
-                    break
-            }
-        };
-        TVA_Input.closeInput = function () {
-            $("#avoidMouseEvents").remove();
-            $(TVA_Input.inputBox).removeClass("focus");
-            $(TVA_Input.inputBox).blur();
-            TVA.activeInput = false;
-            if (typeof onFinishedEditing == "function") {
-                try {
-                    onFinishedEditing(TVA_Input.inputBox.value)
-                } catch (a) {
-                    try {
-                        onFinishedEditing(document.activeElement.value)
-                    } catch (a) {
-                        onFinishedEditing()
+    <script type="text/javascript">
+        var TVA_Input = (function () {
+            var a = function () {
+                this.originalValue = "";
+                this.inputBox = null;
+                this.inputID = null
+            };
+            a.prototype = {
+                init: function () {
+                }, setPosition: function () {
+                }, newInput: function (b, d) {
+                    TVA.activeInput = true;
+                    this.inputBox = document.getElementById(b);
+                    this.inputID = b;
+                    this.originalValue = this.inputBox.value;
+                    if (d && d.clear && d.clear == true) {
+                        this.inputBox.value = ""
                     }
+                    $(this.inputBox).addClass("focus");
+                    document.getElementById(this.inputID).focus();
+                    TVA.onFocus = this.inputID;
+                    $(this.inputBox).unbind("change").bind("change", function (f) {
+                        try {
+                            TVA.log("unbinding ...");
+                            TVA_Input.closeInput();
+                            $(this).unbind(f)
+                        } catch (g) {
+                            TVA.log("### " + g.message)
+                        }
+                        return false
+                    });
+                    var c = this;
+                    $(this.inputBox).unbind("input").bind("input", function (f) {
+                        if (typeof onCharacter == "function") {
+                            onCharacter(c.inputBox.value)
+                        }
+                    });
+                    $("body").append('<div id="avoidMouseEvents" style="width: 1280px; height:720px; position:absolute; top: 0px; left: 0px; z-index:999"></div>');
+                    $("#avoidMouseEvents").click(function () {
+                        TVA_Input.exitInput()
+                    })
+                }, isActive: function () {
+                    return TVA.activeInput
+                }, clear: function () {
+                    this.inputBox.value = ""
+                }, set: function (b) {
+                    this.inputBox.value = b
+                }, processKey: function (b) {
+                    if (b == 229) {
+                        return
+                    }
+                    TVA.log("process key: Key " + b);
+                    var d = $(TVA_Input.inputBox);
+                    switch (b) {
+                        case 46:
+                            d.val("");
+                            break;
+                        case 8:
+                            var d = $(TVA_Input.inputBox);
+                            var g = e();
+                            if (g > 0) {
+                                var c = d.val();
+                                d.val(c.slice(0, -1));
+                                f(g - 1)
+                            }
+                            break;
+                        case 37:
+                            TVA.log("Moving caret left");
+                            var g = e();
+                            TVA.log("pos: ");
+                            f(e() - 1);
+                            break;
+                        case 39:
+                            TVA.log("Moving caret right");
+                            f(e() + 1);
+                            break;
+                        case 65385:
+                            TVA_Input.exitInput();
+                            break;
+                        case 65376:
+                            TVA.log("done");
+                            TVA_Input.closeInput();
+                            break;
+                        default:
+                            break
+                    }
+
+                    function e() {
+                        var i = $(TVA_Input.inputBox);
+                        if (i[0].setSelectionRange) {
+                            var h = i[0].selectionStart;
+                            return h
+                        } else {
+                            TVA.log("getCaretPos error");
+                            return 0
+                        }
+                    }
+
+                    function f(j) {
+                        if (j < 0) {
+                            return
+                        }
+                        var i = $(TVA_Input.inputBox);
+                        TVA.log("Moving from " + e() + " to " + j);
+                        if (i[0] != null) {
+                            if (i[0].createTextRange) {
+                                TVA.log("creteTextRange ok");
+                                var h = i[0].createTextRange();
+                                h.move("character", j);
+                                h.select()
+                            } else {
+                                TVA.log("set selection");
+                                i[0].focus();
+                                i[0].setSelectionRange(j, j)
+                            }
+                        } else {
+                            TVA.log("input[0] == null")
+                        }
+                    }
+                }, closeInput: function () {
+                    TVA.log("Closing input....");
+                    $(this.inputBox).removeClass("focus");
+                    $(this.inputBox).blur();
+                    TVA.activeInput = false;
+                    if (typeof onFinishedEditing == "function") {
+                        try {
+                            onFinishedEditing(this.inputBox.value)
+                        } catch (b) {
+                            try {
+                                onFinishedEditing(this.inputBox.value)
+                            } catch (b) {
+                                onFinishedEditing()
+                            }
+                        }
+                    }
+                    $("#avoidMouseEvents").remove()
+                }, exitInput: function () {
+                    TVA.log("Exiting input....");
+                    this.inputBox.value = this.originalValue;
+                    $(this.inputBox).removeClass("focus");
+                    $(this.inputBox).blur();
+                    TVA.activeInput = false;
+                    if (typeof onExitEditing == "function") {
+                        onExitEditing()
+                    }
+                    $("#avoidMouseEvents").remove()
                 }
-            }
-        };
-        TVA_Input.exitInput = function () {
-            $("#avoidMouseEvents").remove();
-            $(TVA_Input.inputBox).removeClass("focus");
-            $(TVA_Input.inputBox).blur();
-            TVA.activeInput = false;
-            if (typeof onExitEditing == "function") {
-                onExitEditing()
-            }
-        };
+            };
+            return new a()
+        })();
     </script>
     </TVA>
     <script type="text/javascript">
-        var TVA_Widevine = {};
-        TVA_Widevine.playWidevine = function (o) {
-            var f = "com.myapp.widevine";
-            var s;
-            var p;
-            var i;
-            var l = "widevine";
-            var k = "urn:dvb:casystemid:19156";
-            var b;
-            var a = "";
-            if (o.url != null && typeof o.url === "string") {
-                TVA_Player.setURL(o.url)
-            }
-            var j = o.drmServerURL;
-            var r = {"&": "&amp;", "<": "&lt;", ">": "&gt;"};
-            d();
-
-            function d() {
-                webOS.service.request("luna://com.webos.service.drm", {
-                    method: "load", parameters: {drmType: l, appId: f}, onSuccess: function (t) {
-                        p = t.clientId;
-                        i = true;
-                        TVA.log("load method. onSuccess.");
-                        TVA.log("clientId: " + p);
-                        console.log(t);
-                        g()
-                    }, onFailure: function (t) {
-                        TVA.log("[load][" + t.errorCode + "] " + t.errorText)
-                    }
-                })
-            }
-
-            function g() {
-                webOS.service.request("luna://com.webos.service.drm", {
-                    method: "isLoaded", parameters: {appId: f}, onSuccess: function (t) {
-                        TVA.log("isLoaded method. onSuccess.");
-                        TVA.log("clientId: " + t.clientId);
-                        m(t.clientId)
-                    }, onFailure: function (t) {
-                        TVA.log("[isLoaded][" + t.errorCode + "] " + t.errorText)
-                    }
-                })
-            }
-
-            function m(u) {
-                p = u || p;
-                var t = {};
-                t.drmURL = (o.drmServerURL != null) ? o.drmServerURL : "";
-                t.heartbeatPeriod = (o.heartbeatPeriod != null) ? o.heartbeatPeriod : "";
-                t.heartbeatURL = (o.heartbeatURL != null) ? o.heartbeatURL : "";
-                t.ackURL = (o.drmAckServerURL != null) ? o.drmAckServerURL : "";
-                t.streamID = (o.streamID != null) ? o.streamID : "";
-                t.portal = (o.portalID != null) ? o.portalID : "OEM";
-                t.userData = (o.userData != null) ? o.userData : "";
-                var v = '<?xml version="1.0" encoding="utf-8"?><WidevineCredentialsInfo xmlns="http://www.smarttv-alliance.org/DRM/widevine/2012/protocols/"><ContentURL>' + TVA_Player.url + "</ContentURL><DeviceID></DeviceID><StreamID>" + t.streamID + "</StreamID><ClientIP></ClientIP><DRMServerURL>" + t.drmURL + "</DRMServerURL><DRMAckServerURL>" + t.ackURL + "</DRMAckServerURL><DRMHeartBeatURL>" + t.heartbeatURL + "</DRMHeartBeatURL><DRMHeartBeatPeriod>" + t.heartbeatPeriod + "</DRMHeartBeatPeriod><UserData>" + t.userData + "</UserData><Portal>" + t.portal + "</Portal><StoreFront></StoreFront><BandwidthCheckURL>none</BandwidthCheckURL><BandwidthCheckInterval>none</BandwidthCheckInterval></WidevineCredentialsInfo>";
-                webOS.service.request("luna://com.webos.service.drm", {
-                    method: "sendDrmMessage",
-                    parameters: {clientId: p, msgType: "application/widevine+xml", msg: v, drmSystemId: k},
-                    onSuccess: function (w) {
-                        console.log(w);
-                        b = w.msgId;
-                        TVA.log("sendDrmMessage method. onSuccess.");
-                        n()
-                    },
-                    onFailure: function (w) {
-                        TVA.log("sendDrmMessage method. onFailure.");
-                        TVA.log("result.returnValue: " + w.returnValue);
-                        TVA.log("result.errorCode: " + w.errorCode);
-                        TVA.log("result.errorText: " + w.errorText)
-                    }
-                })
-            }
-
-            function c() {
-                if (i) {
-                    TVA.log("Unloading client function");
-                    webOS.service.request("luna://com.webos.service.drm", {
-                        method: "unload", parameters: {clientId: p}, onSuccess: function (t) {
-                            TVA.log("client Id: " + p);
-                            i = false;
-                            console.log("DRM Client is unloaded successfully.")
-                        }, onFailure: function (t) {
-                            console.log("[" + t.errorCode + "] " + t.errorText)
-                        }
-                    });
-                    TVA.log("Unloading client...")
+        var TVA_Widevine = {deviceId: null};
+        TVA_Widevine.playWidevine = function (c) {
+            TVA.log("** PLAYING WIDEVINE");
+            var g = this, d = null, i = null, m = null, a = null, j = null, l = null, f = null, k = null, b = null, a = null;
+            if (!this.deviceId) {
+                try {
+                    this.deviceId = webapis.drminfo.getEsn("WIDEVINE")
+                } catch (h) {
+                    TVA_Player.onError(h);
+                    return
                 }
             }
-
-            function n() {
-                var t = {mediaTransportType: "WIDEVINE", option: {drm: {type: l, clientId: p}}};
-                var u = {drm: t};
-                if (o.startTime != null) {
-                    u.startTime = o.startTime
-                }
-                TVA_Player.play(u)
+            if (c == null) {
+                TVA.log("SETTINGS NULL");
+                c = {};
+                return
+            } else {
+                c.drm = true;
+                i = (c.drmServerURL != null) ? c.drmServerURL : "";
+                j = (c.heartbeatPeriod != null) ? c.heartbeatPeriod : "";
+                l = (c.heartbeatURL != null) ? c.heartbeatURL : "";
+                ackURL = (c.drmAckServerURL != null) ? c.drmAckServerURL : "";
+                f = (c.streamID != null) ? c.streamID : "";
+                k = (c.portalID != null) ? c.portalID : "OEM";
+                m = (c.userData != null) ? c.userData : "";
+                TVA.log("SETTINGS");
+                TVA.log("licenseServer " + i);
+                TVA.log("heartbeatPeriod " + j);
+                TVA.log("heartbeatURL " + l);
+                TVA.log("ackURL " + ackURL);
+                TVA.log("streamID " + f);
+                TVA.log("deviceId " + this.deviceId);
+                TVA.log("portalID " + k);
+                TVA.log("customData " + m);
+                TVA.log("/SETTINGS")
             }
-
-            function q(t) {
-                return r[t] || t
+            TVA_Player.opened = true;
+            if (c.url != null && typeof c.url === "string") {
+                TVA.log("Setting url from settings.url");
+                a = c.url;
+                TVA_Player.setURL(c.url)
+            } else {
+                TVA.log("Setting url from TVA_Player.url");
+                a = TVA_Player.url
             }
-
-            function h(t) {
-                return t.replace(/[&<>]/g, q)
+            TVA.log("open: " + a);
+            if (TVA_Player.player.getState() !== "NONE") {
+                TVA_Player.player.close()
             }
-
-            function e() {
-                s.innerHTML = ""
+            TVA_Player.player.open(a);
+            c.opened = true;
+            d = "DEVICE_ID=" + this.deviceId + "|DEVICE_TYPE_ID=60";
+            if (i != null && i.length > 0) {
+                d += "|DRM_URL=" + i
             }
+            if (k != null) {
+                d += "|PORTAL=" + k
+            }
+            if (m != null && m.length > 0) {
+                d += "|USER_DATA=" + m
+            }
+            TVA.log("drmParam: " + d);
+            TVA_Player.player.setStreamingProperty("WIDEVINE", d);
+            TVA_Player.play(c)
         };
     </script>
     </TVA>
     <script type="text/javascript">
         var TVA_PlayReady = {};
-        TVA_PlayReady.play = function (g) {
-            if (g.url != null && typeof g.url === "string") {
-                TVA_Player.setURL(g.url)
+        TVA_PlayReady.play = function (c) {
+            TVA_Player.playStateChange(TVA_Player.state.connecting);
+            var g = this, d = {}, h = null, l = null, a = null, b = null, i = null, j = null, f = null, e = null;
+            if (c == null) {
+                TVA.log("*** SETTINGS NULL");
+                c = {}
             }
-            var n = "com.myapp.playready";
-            var b;
-            var c;
-            var m = "playready";
-            var l = "urn:dvb:casystemid:19219";
-            var e;
-            TVA_PlayReady.settings = g;
-            if (!g.license && !g.customData) {
-                TVA.log("No license and customData found");
-                TVA_Player.play(g)
-            } else {
-                d()
+            c.drm = true;
+            if (typeof(c.url) != "undefined") {
+                TVA_Player.setURL(c.url);
+                TVA.log("url: " + c.url)
             }
-
-            function d() {
-                webOS.service.request("luna://com.webos.service.drm", {
-                    method: "load", parameters: {drmType: m, appId: n}, onSuccess: function (o) {
-                        b = o.clientId;
-                        c = true;
-                        TVA.log("load method. onSuccess.");
-                        TVA.log("clientId: " + b);
-                        TVA.log(o);
-                        j(b)
-                    }, onFailure: function (o) {
-                        TVA.log("[load][" + o.errorCode + "] " + o.errorText)
-                    }
-                })
+            if (typeof(c.license) != "undefined") {
+                d.LicenseServer = c.license;
+                TVA.log("license: " + c.license)
             }
-
-            function a() {
-                webOS.service.request("luna://com.webos.service.drm", {
-                    method: "isLoaded", parameters: {appId: n}, onSuccess: function (o) {
-                        TVA.log("isLoaded method. onSuccess.");
-                        TVA.log("clientId: " + o.clientId);
-                        j(o.clientId)
-                    }, onFailure: function (o) {
-                        TVA.log("[isLoaded][" + o.errorCode + "] " + o.errorText)
-                    }
-                })
+            if (typeof(c.customData) != "undefined") {
+                d.CustomData = c.customData;
+                TVA.log("customData: " + c.customData)
             }
-
-            function j(o) {
-                b = o || b;
-                var p = '<?xml version="1.0" encoding="utf-8"?> 				<PlayReadyInitiator xmlns="http://schemas.microsoft.com/DRM/2007/03/protocols/"> ';
-                if (g.license != null && typeof g.license === "string") {
-                    TVA.log("LICENSE FOUND");
-                    p += "<LicenseServerUriOverride> 						<LA_URL>" + g.license + "</LA_URL> 					</LicenseServerUriOverride>"
-                }
-                if (g.customData != null && typeof g.customData === "string") {
-                    TVA.log("CUSTOM DATA FOUND");
-                    p += "<SetCustomData> 						<CustomData>" + g.customData + "</CustomData> 					</SetCustomData>";
-                    TVA.log("CUSTOM DATA: " + g.customData)
-                } else {
-                    TVA.log("No CUSTOM DATA")
-                }
-                p += "</PlayReadyInitiator>";
-                TVA.log("clientId used to send message: " + b);
-                webOS.service.request("luna://com.webos.service.drm", {
-                    method: "sendDrmMessage",
-                    parameters: {clientId: b, msgType: "application/vnd.ms-playready.initiator+xml", msg: p, drmSystemId: l},
-                    onSuccess: function (q) {
-                        TVA.log(q);
-                        e = q.msgId;
-                        TVA.log("sendDrmMessage method. onSuccess.");
-                        k();
-                        f()
-                    },
-                    onFailure: function (q) {
-                        TVA.log("sendDrmMessage method. onFailure.");
-                        TVA.log("result.returnValue: " + q.returnValue);
-                        TVA.log("result.errorCode: " + q.errorCode);
-                        TVA.log("result.errorText: " + q.errorText)
-                    }
-                })
+            TVA.log("open: " + TVA_Player.url);
+            if (TVA_Player.player.getState() !== "NONE") {
+                TVA_Player.player.close()
             }
-
-            function i() {
-                if (c) {
-                    TVA.log("Unloading client function");
-                    webOS.service.request("luna://com.webos.service.drm", {
-                        method: "unload", parameters: {clientId: b}, onSuccess: function (o) {
-                            TVA.log("client Id: " + b);
-                            c = false
-                        }, onFailure: function (o) {
-                        }
-                    });
-                    TVA.log("Unloading client...")
-                }
+            TVA_Player.player.open(TVA_Player.url);
+            c.opened = true;
+            if (typeof(c.license) != "undefined" || typeof(c.customData) != "undefined") {
+                d.DeleteLicenseAfterUse = true;
+                d.GetChallenge = true;
+                var k = TVA_Player.player.setDrm("PLAYREADY", "SetProperties", JSON.stringify(d));
+                TVA.log("setDrm param: " + JSON.stringify(d));
+                TVA.log("setDrm SetProperties status: " + k)
             }
-
-            var h;
-
-            function k() {
-                var o = webOS.service.request("luna://com.webos.service.drm", {
-                    method: "getRightsError", parameters: {clientId: b, subscribe: true}, onSuccess: function (p) {
-                        contentId = p.contentId;
-                        if (contentId == e) {
-                            if (0 == p.errorState) {
-                                console.log("No license")
-                            } else {
-                                if (1 == p.errorState) {
-                                    console.log("Invalid license")
-                                }
-                            }
-                            console.log("DRM System ID: " + p.drmSystemId);
-                            console.log("License Server URL: " + p.rightIssueUrl)
-                        }
-                    }, onFailure: function (p) {
-                        console.log("[" + p.errorCode + "] " + p.errorText)
-                    }
-                });
-                h = o
-            }
-
-            function f() {
-                var o = {option: {drm: {type: m, clientId: b}}};
-                TVA_PlayReady.settings.drm = o;
-                TVA_Player.play(TVA_PlayReady.settings)
-            }
+            TVA_Player._updateRect();
+            TVA_Player.player.setListener(TVA_Player.listener, TVA_Player._logSuccess, TVA_Player._logException);
+            TVA_Player.play(c)
         };
     </script>
     </TVA>
@@ -5113,6 +4192,6 @@
 </div>
 
 <div id="debugWindow"
-     style="position: absolute; top: 10px; right: 10px; width: 200px; height: 700px; color: lime; font-size: 14px; line-height: 16px; background-color: none; border: none; z-index: 3000; display: none;"></div>
+     style="position: absolute; top: 10px; right:10px; width: 200px; height: 700px; overflow:hidden; color: lime; font-size: 14px; line-height: 16px; background-color: none; border: none; z-index: 3000; display: none;"></div>
 </body>
 </html>
