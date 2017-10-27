@@ -1,0 +1,103 @@
+/*ParentControl*/
+
+#PC_Title {
+    position: absolute;
+    top: 38px;
+    left: 80px;
+    width: 241px;
+    height: 22px;
+    font-family: OpenSansSemibold, sans-serif !important;
+    font-size: 28px !important;
+    color: #999999;
+    line-height: 0.86;
+    text-align: left;
+    font-weight: 600;
+}
+
+#PC_Pin {
+    position: absolute;
+    top: 144px;
+    left: 377px;
+    width: 600px;
+    height: 60px;
+    color: #ffffff;
+    text-align: center;
+    
+    line-height: 60px;
+}
+
+#btn_change_pin {
+    width: 243px;
+    height: inherit;
+    background-color: #333333;
+    font-family: OpenSansRegular, sans-serif !important;
+    font-size: 24px !important;
+}
+
+#btn_recover_pin {
+    /*//margin-left: 30px;*/
+    background-color: #333333;
+    width: 243px;
+    height: inherit;
+    position: absolute;
+    top: 0;
+    left: 282px;
+    font-family: OpenSansRegular, sans-serif !important;
+    font-size: 24px !important;
+}
+
+#PC_Line {
+    background-color: #333333;
+    position: absolute;
+    left: 377px;
+    top: 248px;
+    width: 526px;
+    height: 2px;
+}
+
+#PC_Buttons {
+    position: absolute;
+    top:292px;
+    left: 377px;
+    height: 285px;
+    width: 508px;
+    background: transparent;
+    text-align: left;
+}
+
+.PC_ButtonsDef {
+    width: inherit;
+    height: 60px;
+    background-color: #333333;
+    color: #ffffff;
+    font-family: OpenSansRegular, sans-serif !important;
+    font-size: 24px !important;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 60px;
+
+}
+
+
+#PC_Buttons > div {
+    padding-left: 14px !important;
+}
+
+.checkSignPC {
+    position: relative;
+    top: -40px;
+    left: 521px;
+    background: url('assets/check.png') no-repeat center;
+    width: 26px;
+    height: 21px;
+}
+
+.PC_ButtonsDef.focus {
+    background-color: #ae1927;
+}
+
+
+#btn_change_pin.focus, #btn_recover_pin.focus {
+    background-color: #ae1927;
+}

@@ -1,0 +1,162 @@
+/*keyboard*/
+
+#FlixLogo {
+    position: absolute;
+    top: 66px;
+    left: 561px;
+    width: 159px;
+    height: 109px;
+    background-image: url(assets/logo.png);
+}
+
+.inputContainer {
+    height: 69px;
+    width: 412px;
+    overflow: hidden;
+}
+
+#keyboardInput {
+    display: inline-block;
+    text-align: right;
+    height: 69px;
+    color: #FFFFFF;
+    font-size: 36px !important;
+    font-family: OpenSansRegular !important;
+    line-height: 80px;
+    position: relative;
+    margin-left: 21px !important;
+    letter-spacing: 1px;
+    width: 1280px;
+}
+
+#keyboardInput.has-cursor:after {
+    content: '|';
+    position: absolute;
+    right: -20px;
+    margin-left: 0px;
+    font-size: 50px;
+    bottom: -4px;
+}
+
+.keyboardFirstRow {
+    width: 435px;
+    height: 53px;
+}
+
+.keyboardSecondRow {
+    width: 435px;
+    height: 53px;
+}
+
+.keyboardThirdRow {
+    width: 435px;
+    height: 53px;
+}
+
+.keyboardFourthRow {
+    width: 435px;
+    height: 53px;
+}
+
+.keyboardFifthRow {
+    width: 435px;
+    height: 53px;
+}
+
+
+.keyboardFifthRow > div > span {
+    font-family: OpenSansRegular !important;
+    color: #FFFFFF;
+    font-size: 30px !important;
+}
+
+.keyboardFifthRow > div.focus {
+    background-color: #ae1927;
+}
+
+.keyboardLetters {
+    display: inline-block;
+}
+
+.keyboardLetters > div {
+    display: inline-block;
+    position: relative;
+    height: 48px;
+    width: 48px;
+    text-align: center;
+    line-height: 48px;
+}
+
+.keyboardLetters > div.focus {
+    background-color: #ae1927;
+}
+
+.keyboardLetters > div > span {
+    position: relative;
+    font-family: OpenSansRegular !important;
+    color: #FFFFFF;
+    font-size: 30px !important;
+}
+
+.keyboardShift {
+    position: absolute;
+    left: 10px;
+    width: 75px;
+    text-align: center;
+    line-height: 48px;
+}
+
+.keyboardSpace {
+    position: absolute;
+    left: 110px;
+    width: 100px;
+    text-align: center;
+    line-height: 48px;
+}
+
+.keyboardDelete {
+    position: absolute;
+    left: 242px;
+    width: 60px;
+    text-align: center;
+    line-height: 48px;
+}
+
+.keyboardClear {
+    position: absolute;
+    left: 335px;
+    width: 85px;
+    text-align: center;
+    line-height: 48px;
+}
+
+#ExtraInfo {
+    position: absolute;
+    top: 200px;
+    left: 680px;
+    width: 470px;
+    height: 420px;
+}
+
+#mockup_cursor {
+    color: #FFFFFF;
+    font-size: 50px !important;
+    margin-bottom: 5px !important;
+    float: right;
+}
+
+#keyboardContainer{
+    margin-top: 50px !important;
+}
+
+#white_line {
+    border-bottom: solid 2px #FFFFFF;
+    width: 435px;
+}
+
+#keyboardBox{
+    position: absolute;
+    left: 174px;
+    top: 200px;
+    overflow: hidden;
+}

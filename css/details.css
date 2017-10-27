@@ -1,0 +1,180 @@
+/*details*/
+
+#detailsList > .Down_Arrow {
+    position: absolute;
+    top: 610px;
+    left: 600px;
+    width: 80px;
+    height: 47px;
+    background-image: url(assets/pointer_arrows/bttn_pointer_down.png);
+}
+
+#detailsList > .Up_Arrow {
+    position: absolute;
+    top: 70px;
+    left: 600px;
+    width: 80px;
+    height: 47px;
+    background-image: url(assets/pointer_arrows/bttn_pointer_up.png);
+}
+
+#category_details_media .title, #category_details_related .title {
+    font-family: OpenSansSemibold;
+    font-size: 28px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 0.86;
+    text-align: left;
+    color: #999999;
+    left: 44px;
+    margin: 0 0 30px 80px;
+}
+
+#category_details_related .title {
+    top: 10px;
+}
+
+#details_media {
+    left: 76px;
+}
+
+#details_related .active .thmb {
+    width: 216px;
+    height: 325px;
+    top: -13px;
+    left: -24px;
+}
+
+#details_related {
+    left: 100px;
+}
+
+#details_related.Grid .active .content .coverartMovieTitle {
+    top: 139px;
+    left: -18px;
+    width: 215px;
+    height: 31px;
+    color: #FFFFFF;
+    font-size: 25px;
+    position: absolute;
+}
+
+#details_related.Grid .content .coverartMovieTitle {
+    top: 139px;
+    left: -18px;
+    width: 215px;
+    height: 31px;
+    color: #FFFFFF;
+    font-size: 25px;
+    position: absolute;
+}
+
+#details_related .gridElement.active .placeholder {
+    background-image: url(assets/focus/fcs_home_standard.png) !important;
+    width: 262px !important;
+    height: 370px !important;
+    left: -47px !important;
+    top: -36px !important;
+    background-size: 262px 370px;
+    background-repeat: no-repeat;
+    position: absolute !important;
+}
+
+#detailsList #movieTitleRating {
+    position: absolute;
+    top: 251px;
+    left: 285px;
+    width: 985px;
+    height: 200px;
+    color: #fff;
+}
+
+#details_watch .content p {
+    color: #fff;
+    padding: 14px 0;
+    text-align: center;
+    font-size: 22px;
+}
+
+#detailsWatchCoverArt {
+    position: absolute;
+    top: 195px;
+    left: 82px;
+    width: 168px;
+    height: 250px;
+    border: solid 1px #ae1927;
+    background-color: #999;
+}
+
+#detailsWatchBackground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1280px;
+    height: 321px;
+    border-bottom: solid 1px #ae1927;
+}
+
+#details_watch .gridElement.active {
+    background-color: #ae1927;
+}
+
+#details_watch .gridElement {
+    /*top: -65px;*/
+    background-color: #333;
+}
+
+#detailsList .thmb {
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#detailsList .active .thmb {
+    /* box-shadow: 0px 0px 25px 17px rgba(255,255,255,0.2); */
+    top: -13px;
+    left: -20px;
+    width: 202px;
+    height: 302px;
+}
+
+#detailsList #details_media .active .thmb {
+    width: 453px;
+}
+
+#detailsList .Grid:not(#details_watch) .active .placeholder {
+    background-image: url(assets/focus/fcs_details.png);
+    top: -36px;
+    left: -43px;
+    width: 500px;
+    height: 346px;
+    position: absolute;
+}
+
+#detailsList #details_watch .active .thmb {
+    box-shadow: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#detailsList .Grid .content .coverartMovieTitle {
+    position: absolute;
+    bottom: -35px;
+    color: rgba(255, 255, 255, 0.25);
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+    height: 26px;
+}
+
+#detailsList .Grid .active .content p {
+    /* top: 129px; */
+    left: 0px;
+    width: 180px;
+    color: rgba(255, 255, 255, 1);
+    /* font-size: 25px; */
+}

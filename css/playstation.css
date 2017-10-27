@@ -1,0 +1,25 @@
+/*playstation*/
+
+.playstation #PlayerControls #back {
+    background-image: url(assets/btn_o.png) !important;
+}
+
+.playstation #PlayerControls #back.focus {
+    color: #ae1927;
+    background-image: url(assets/btn_o.png) !important;
+}
+
+.playstation #PlayerControls #back {
+}
+
+.playstation #backIcon, .playstation #ModalPurchase .back, .playstation #rating_back_btn, .playstation #ModalSignReg #backSignReg {
+    background-image: url(assets/btn_o.png) !important;
+}
+
+.playstation #backIcon.focus, .playstation #pin_back.focus, .playstation #ModalPurchase .back.focus, .playstation #ModalSignReg #backSignReg.focus {
+    background-image: url(assets/btn_o.png) !important;
+}
+
+.playstation #ModalMaintenance #btn_goBack {
+    background-image: url(assets/btn_o.png);
+}

@@ -1,0 +1,722 @@
+/*templates.css*/
+
+@font-face {
+    font-family: HindVadodaraRegular;
+    src: url(fonts/HindVadodara-Regular.ttf);
+}
+
+@font-face {
+    font-family: Ubuntu;
+    src: url(fonts/Ubuntu-Light.ttf);
+}
+
+@font-face {
+    font-family: OpenSansRegular;
+    src: url(fonts/OpenSans-Regular.ttf);
+}
+
+@font-face {
+    font-family: OpenSansSemibold;
+    src: url(fonts/OpenSans-Semibold.ttf);
+}
+
+@font-face {
+    font-family: OpenSansBold;
+    src: url(fonts/OpenSans-Bold.ttf);
+}
+
+body {
+    position: absolute;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    margin: 0;
+    color: #1a1a1a;
+}
+
+/*Root***/
+
+#Root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+}
+
+#AppContent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+}
+
+#AppContent * {
+    font-size: 20px;
+    /* list-style: none; */
+    padding: 0;
+    font-family: OpenSansRegular;
+    margin: 0;
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Chrome/Safari/Opera */
+    -khtml-user-select: none;
+    /* Konqueror */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE/Edge */
+    user-select: none;
+    /* non-prefixed version, currently                                    not supported by any browser */
+}
+
+* {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Chrome/Safari/Opera */
+    -khtml-user-select: none;
+    /* Konqueror */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE/Edge */
+    user-select: none;
+    /* non-prefixed version, currently                                    not supported by any browser */
+}
+
+#safeArea {
+    position: absolute;
+    width: 1156px;
+    height: 642px;
+    left: 64px;
+    top: 36px;
+    background: rgba(210, 46, 46, 0.34);
+    pointer-events: none;
+    display: none;
+}
+
+#container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1280px;
+    height: 720px;
+    transition-duration: 0.5s;
+}
+
+#container.offScreen {
+    left: -334px;
+}
+
+#splash {
+    position: absolute;
+    width: 1280px;
+    height: 720px;
+    top: 0;
+    left: 0;
+    background: url(../css/assets/SplashScreenLogo.png) no-repeat center, url(../css/assets/background.png) no-repeat center;
+    transition-duration: 1s;
+    opacity: 1;
+    z-index: 1;
+}
+
+div#splash.fadeOut {
+    opacity: 0;
+}
+
+#splashLoader {
+    position: absolute;
+    width: 68px;
+    height: 68px;
+    top: 594px;
+    left: 615px;
+    background-image: url(../css/assets/loading.png);
+}
+
+#loaderContainer {
+    display: none;
+    position: absolute;
+    width: 1280px;
+    height: 720px;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+#loaderShadow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#loader {
+    position: absolute;
+    width: 68px;
+    height: 68px;
+    top: 326px;
+    left: 611px;
+    background-image: url(../css/assets/loading.png);
+}
+
+#main-background {
+    position: absolute;
+    width: 1280px;
+    height: 720px;
+    top: 0;
+    left: 0;
+    background-repeat: no-repeat;
+    background-image: url(assets/background.png) !important;
+}
+
+#splash-background {
+    position: absolute;
+    width: 1280px;
+    height: 720px;
+    top: 0;
+    left: 0;
+    background: #000000 no-repeat;
+}
+
+#AmazonServicesPurchaseItem-BuyButton.focus,
+#AmazonServicesPurchaseItem-Close.focus {
+    box-shadow: 0 0 10px 5px #aef;
+}
+
+#btnRegister, #btnRegisterSignReg {
+    top: 362px;
+}
+
+#btnSignIn, #btnSignInSignReg {
+    top: 287px;
+}
+
+/*Margin between sections in Home*/
+#category_home_now_showing {
+    margin-top: -26px;
+}
+
+#category_home_red_carpet {
+    margin-top: 13px;
+}
+
+#category_home_upcoming {
+    margin-top: 15px;
+}
+
+/*Arrows*/
+
+.Arrow {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: no-repeat center;
+    background-size: contain;
+}
+
+.Left_Arrow {
+    background-image: url(assets/pointer_arrows/bttn_pointer_left.png);
+}
+
+.Left_Arrow.active {
+    background-image: url(assets/pointer_arrows/bttn_pointer_left_focus.png);
+}
+
+.Right_Arrow {
+    background-image: url(assets/pointer_arrows/bttn_pointer_right.png);
+}
+
+.Right_Arrow.active {
+    background-image: url(assets/pointer_arrows/bttn_pointer_right_focus.png);
+}
+
+.Up_Arrow {
+    background-image: url(assets/pointer_arrows/bttn_pointer_up.png);
+}
+
+.Up_Arrow.Arrow.hoverButton.active, #detailsList > .Up_Arrow.active {
+    background-image: url(assets/pointer_arrows/bttn_pointer_up_focus.png);
+}
+
+.Down_Arrow {
+    background-image: url(assets/pointer_arrows/bttn_pointer_down.png);
+}
+
+.Down_Arrow.Arrow.hoverButton.active, #detailsList > .Down_Arrow.active {
+    background-image: url(assets/pointer_arrows/bttn_pointer_down_focus.png);
+}
+
+.Down_Arrow.Arrow.hoverButton {
+    top: 614px !important;
+}
+
+#mainMenu .gridElement.active {
+    background-color: #ae1927;
+}
+
+#mainMenu .thmb {
+    background: no-repeat 70px;
+}
+
+#mainMenu .content p {
+    color: #fff;
+    left: 115px;
+    position: absolute;
+    padding: 10px 0 0 0;
+    line-height: 20px;
+    font-size: 22px;
+}
+
+.movieTitleContainer {
+    position: absolute;
+    bottom: 85px;
+    left: 0;
+    color: rgba(255, 255, 255, 0.25);
+    width: 183px;
+    height: 31px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    text-align: center;
+    line-height: 29px;
+}
+
+.active .content .movieTitleContainer {
+    /*
+    left: -18px;
+
+    font-size: 25px;
+     */
+    left: -18px;
+    bottom: 55px;
+    width: 215px;
+    color: rgba(255, 255, 255, 1);
+    font-size: 25px;
+}
+
+#backIconBackground {
+    background: url(assets/back_button_shadow.png);
+    position: absolute;
+    left: 1116px;
+    bottom: 0;
+    width: 497px;
+    height: 185px;
+    pointer-events: none;
+    /* background-color: #fff; */
+}
+
+#thumbnailList {
+    top: 37px;
+    position: absolute;
+    left: 0;
+}
+
+#movieDetailsInfo {
+    position: absolute;
+    top: 37px;
+    left: 0;
+    width: 970px;
+    overflow: hidden;
+}
+
+#movieTitleRating .movieTitle {
+    position: absolute;
+    /* height: 100px; */
+    font-family: OpenSansRegular;
+    font-size: 38px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    color: #ececec;
+    max-width: 750px;
+    bottom: 170px;
+}
+
+#movieTitleRating .movieTitle .movieRating {
+    position: absolute;
+    right: -23px;
+    top: 6px;
+}
+
+#movieTitleRating {
+    position: absolute;
+    top: 251px;
+    left: 414px;
+    width: 300px;
+    height: 200px;
+    color: #fff;
+}
+
+#myMoviesList .title {
+    position: absolute;
+    color: #fff;
+    width: 300px;
+    left: -15px;
+    font-size: 28px;
+}
+
+#myMoviesList .active .content .movieTitleContainer {
+    bottom: -64px;
+}
+
+#myMoviesList .movieTitleContainer {
+    bottom: -40px;
+}
+
+#descActors {
+    position: absolute;
+    top: 420px;
+    left: 289px;
+    width: 900px;
+    height: 10px;
+}
+
+#makers {
+    position: absolute;
+    top: 443px;
+    left: 50px;
+    text-align: right;
+    width: 200px;
+    height: 273px;
+    overflow: hidden;
+}
+
+#makers .title {
+    font-family: OpenSansRegular;
+    font-size: 20px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.2;
+    text-align: right;
+    color: #999999;
+    margin-top: 10px;
+}
+
+#descActors .title {
+    font-family: OpenSansRegular;
+    font-size: 20px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.2;
+    text-align: left;
+    color: #999999;
+    margin-top: 10px;
+}
+
+#makers p {
+    font-family: OpenSansRegular;
+    font-size: 20px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.2;
+    text-align: right;
+    color: #ffffff;
+}
+
+#descActors p {
+    font-family: OpenSansRegular;
+    font-size: 20px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.2;
+    text-align: left;
+    color: #ffffff;
+}
+
+#TextScroller .mask {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 600px;
+    background: -moz-linear-gradient(top, rgba(248, 80, 50, 1) 0%, rgba(243, 57, 36, 0) 29%, rgba(235, 22, 14, 0) 73%, rgba(230, 0, 0, 1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(248, 80, 50, 1)), color-stop(29%, rgba(243, 57, 36, 0)), color-stop(73%, rgba(235, 22, 14, 0)), color-stop(100%, rgba(230, 0, 0, 1)));
+    /* background: -webkit-linear-gradient(top, rgba(28, 28, 28,1) 0%, rgba(0,0,0,0) 10%, rgba(0,0,0,0) 90%, rgba(2,2,2,1) 100%); */
+    background: -o-linear-gradient(top, rgba(28, 28, 28, 1) 0%, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, 0) 90%, rgba(2, 2, 2, 1) 100%);
+    background: -ms-linear-gradient(top, rgba(28, 28, 28, 1) 0%, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, 0) 90%, rgba(2, 2, 2, 1) 100%);
+    background: linear-gradient(to bottom, rgb(28, 28, 28) 0%, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, 0) 90%, rgb(2, 2, 2) 100%);
+}
+
+#track {
+    position: absolute;
+    height: 100%;
+    width: 5px;
+    top: 0;
+    left: 0;
+}
+
+#textFieldCover {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#home_red_carpet .placeholderRedCarpet .movieDescription {
+    top: 227px;
+    font-size: 15px;
+    position: absolute;
+}
+
+#home_red_carpet .placeholderRedCarpet .airingInfo {
+    top: 190px;
+    position: absolute;
+}
+
+#home_red_carpet .placeholderRedCarpet .movieTitle {
+    top: 145px;
+    font-size: 23px;
+    /* width: 327px; */
+    height: 30px;
+    position: absolute;
+    font-family: OpenSansSemibold;
+}
+
+#home_red_carpet .movieTitle > div {
+    position: relative;
+}
+
+#home_red_carpet_Right_Arrow {
+    width: 176px;
+    background-position: right;
+}
+
+.placeholderRedCarpet {
+    position: absolute;
+    width: 500px;
+    height: 200px;
+    left: 260px;
+    top: 60px;
+    color: #fff;
+}
+
+.rating {
+    position: absolute;
+    top: 0;
+    height: 30px;
+    right: -20px;
+}
+
+.star {
+    background-repeat: no-repeat;
+}
+
+.star:nth-child(1) {
+}
+
+.star:nth-child(2) {
+    left: 28px;
+}
+
+.star:nth-child(3) {
+    left: 56px;
+}
+
+.star:nth-child(4) {
+    left: 84px;
+}
+
+.star:nth-child(5) {
+    left: 111px;
+}
+
+.star:nth-child(6) {
+    left: 139px;
+}
+
+.noStar {
+    background-image: url(assets/empty_star.png);
+    width: 28px;
+    height: 26px;
+    position: absolute;
+}
+
+#backIcon {
+    position: absolute;
+    left: 320px;
+    bottom: 35px;
+    width: 200px;
+    height: 40px;
+    background: url('assets/backarrow.png') no-repeat;
+    padding: 3px 0 0 45px;
+    /* top: 633px; */
+    font-family: OpenSansBold, sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    color: #FFFFFF;
+    text-align: left;
+    pointer-events: auto;
+}
+
+#backIcon.active,
+#pin_back.active {
+    background-image: url("assets/backarrow_focus.png") !important;
+    color: #ae1927 !important;
+}
+
+#signin_handler,
+#register_handler {
+    position: absolute;
+    top: 200px;
+    left: 680px;
+    width: 470px;
+    height: 420px;
+}
+
+.check.active {
+    position: absolute;
+    background-image: url(assets/check.png);
+    width: 26px;
+    height: 21px;
+    left: 550px;
+    top: 20px;
+}
+
+#logo {
+    position: absolute;
+    top: 0;
+    left: 380px;
+    background: url(assets/SplashScreenLogo.png) no-repeat center;
+    background-size: contain;
+    width: 538px;
+    height: 538px;
+}
+
+#myMoviesLoggedOut #logo {
+    position: absolute;
+    top: 66px;
+    left: 561px;
+    /*background-image: url(assets/SplashScreenLogo.png);*/
+    background: url(assets/logo.png) no-repeat center;
+    background-size: cover;
+    width: 159px;
+    height: 109px;
+}
+
+#rating_back_btn {
+    position: absolute;
+    left: 320px;
+    bottom: 35px;
+    width: 200px;
+    height: 40px;
+    background: url('assets/backarrow.png') no-repeat;
+    padding: 3px 0 0 45px;
+    /* top: 633px; */
+    font-family: OpenSansBold, sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    color: #FFFFFF;
+    text-align: left;
+    pointer-events: auto;
+}
+
+#rating_back_btn.active {
+    color: #ae1927;
+    background-image: url(assets/backarrow_focus.png);
+}
+
+div#rating_yes_btn {
+    width: 253px;
+    height: 60px;
+    background-color: #333;
+    left: 510px;
+    line-height: 60px;
+}
+
+#rating_yes_btn.focus {
+    background-color: #ae1927;
+}
+
+#buttons {
+    position: absolute;
+    top: 210px;
+    left: 350px;
+    width: 574px;
+    height: 100px;
+}
+
+.pop_btn p {
+    text-align: center;
+    margin: 12px 0;
+}
+
+.pop_btn {
+    position: absolute;
+    width: 253px;
+    height: 60px;
+    background-color: #333333;
+    font-family: OpenSansRegular, sans-serif, sans-serif;
+    font-size: 24px;
+}
+
+.pop_btn.focus {
+    background-color: #ae1927;
+}
+
+#btn_exit.pop_btn.active {
+    background-color: #ae1927;
+}
+
+#btn_goBack {
+    right: 0;
+}
+
+#category_home_red_carpet .title {
+    top: 13px !important;
+}
+
+.promo {
+    position: absolute;
+    width: 585px;
+    left: 30px;
+    color: #fff;
+    top: 140px;
+}
+
+.promo p:nth-child(1) {
+    font-family: OpenSansBold !important;
+}
+
+.promo p:nth-child(3) {
+    background: #ae1927;
+}
+
+.promo p:nth-child(2) {
+    margin: 0 0 8px 0 !important;
+}
+
+#sideMenu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 334px;
+    height: 720px;
+    background-color: #000;
+}
+
+#sideMenuLogo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 334px;
+    height: 192px;
+    background: url(assets/logo.png) no-repeat center;
+}
+
+
+
+
+
+

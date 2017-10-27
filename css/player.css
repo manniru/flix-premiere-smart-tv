@@ -1,0 +1,250 @@
+/*player*/
+
+#Player {
+    position: absolute;
+    width: 1280px;
+    height: 720px;
+}
+
+#PlayerControls {
+    position: absolute;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    width: 100%;
+    height: 175px;
+    transition-duration: 2s;
+}
+
+#PlayerControls #back {
+    top: 69px;
+    /*. gridElement p . selected width: 99 px;*/
+    height: 52px;
+    color: #ececec;
+    font-size: 18px;
+    font-weight: bold;
+    background: url(assets/backarrow.png) no-repeat;
+    padding: 4px 0 0 45px;
+    font-family: OpenSansRegular, sans-serif;
+    right: 95px;
+}
+
+#PlayerControls.languageOptions {
+    height: 260px;
+    transition-duration: 2s;
+    /*opacity: 0.85;*/
+}
+
+#Player #progressBar {
+    height: 4px;
+    width: 1121px;
+    background-color: #333333;
+    top: 44px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#PlayerControls #back.active {
+    background-image: url(assets/backarrow_focus.png);
+    color: #ae1927;
+}
+
+#playerFooter {
+    position: relative;
+}
+
+.languageOptions #playerFooter {
+    top: 85px;
+}
+
+#captionLanguageList {
+    color: #fff;
+    top: 30px;
+    position: absolute;
+    font-size: 25px;
+    display: none;
+    text-align: center;
+    font-family: OpenSansRegular, sans-serif;
+}
+
+#captionLanguageList .gridElement.active {
+    color: #ae1927;
+}
+
+#captionLanguageList .gridElement.selected p, #captionLanguageList .gridElement p.selected {
+    background-image: url(assets/check.png);
+}
+
+#captionLanguageList .gridElement.active p.selected {
+    background-image: url(assets/check_focus.png);
+}
+
+
+.languageOptions #captionLanguageList {
+    display: block;
+    left: 74px;
+}
+
+#Player .playerFooter.btn {
+    background-color: #333;
+    top: 75px;
+    width: 52px;
+    height: 52px;
+}
+
+.playerFooter {
+    position: absolute;
+}
+
+.playerFooter.btn.focus {
+    background-color: #ae1927 !important;
+}
+
+#CC {
+    left: 748px;
+    background: url(assets/ic_cc.png) no-repeat center;
+}
+
+#captions {
+    position: absolute;
+    width: 1280px; /*inherit but some tvs dont accept*/
+    bottom: 85px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+}
+
+#captions p {
+    position: relative;
+    font-size: 32px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#playSpeedBox {
+    display: none;
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    top: 190px;
+    left: 550px;
+    color: #fff;
+    background-color: rgba(170, 170, 170, 0.52);
+    border-radius: 24px;
+}
+
+#playSpeedBox .arrows {
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    left: 72px;
+}
+
+.arrows {
+    text-align: center;
+}
+
+#playSpeed {
+    font-size: 70px;
+    font-family: sans-serif;
+    text-align: center;
+    margin: 40px 0 0 0;
+}
+
+#playSpeedBox .arrows.backward {
+    background: url(assets/ic_playspeed_rw.png) no-repeat 0;
+}
+
+#playSpeedBox .arrows.forward {
+    background: url(assets/ic_playspeed_ff.png) no-repeat 0;
+}
+
+#time {
+    left: 80px;
+    top: 75px;
+    color: #aaa;
+    font-size: 20px;
+    font-family: OpenSansRegular, sans-serif;
+}
+
+#time span {
+    color: #818181;
+}
+
+#time span:nth-child(1) {
+    color: #fff;
+}
+
+#time span:nth-child(2) {
+    color: #aaa;
+}
+
+#progress {
+    height: 100%;
+    width: 0;
+    background-color: #ae1927;
+}
+
+#buffer {
+    height: 100%;
+    width: 0;
+    background-color: #c3c3c3;
+}
+
+/* buttons */
+
+.play {
+    display: none;
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url(assets/ic-play.png) no-repeat center;
+}
+
+.pause {
+    display: none;
+    position: absolute;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    background: url(assets/ic-pause.png) no-repeat center;
+}
+
+#forward {
+    left: 681px;
+    background: url(assets/ic-ff.png) no-repeat center;
+}
+
+#rewind {
+    left: 547px;
+    background: url(assets/ic-rw.png) no-repeat center;
+}
+
+#playPause {
+    left: 614px;
+}
+
+.btn.playing .pause {
+    display: block;
+}
+
+.btn.paused .play {
+    display: block;
+}
+
+.play .btn .play.forward {
+    display: block;
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+}
+
+.btn .arrows.forward .arrow, .btn .play.forward .arrow {
+    border-width: 10px 0 10px 15px;
+    pointer-events: none;
+}
+
+.btn .arrows.backward .arrow {
+    border-width: 10px 15px 10px 0;
+}

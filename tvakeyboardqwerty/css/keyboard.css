@@ -1,0 +1,505 @@
+#keyboard {
+    display: none;
+    position: absolute;
+    z-index: 10000;
+    left: 30px;
+    right: 30px;
+    bottom: 30px;
+    background: rgba(80, 80, 80, 0.85);
+    border-top: 1px solid rgba(255, 255, 255, 0.4);
+    border-left: 1px solid rgba(255, 255, 255, 0.4);
+
+    color: #565d6a;
+    text-shadow: 0 1px 0 #fff;
+
+	-webkit-box-shadow: 2px 2px 6px 0 #000;
+    box-shadow: 2px 2px 6px 0 #000;
+    -webkit-user-select: none;
+    user-select: none;
+
+}
+#keyboard .kb-info {
+    width: 160px;
+    background: rgba(0, 0, 0, 0.4);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    padding: 11px 0;
+}
+
+#keyboard .kb-info .kb-info-button {
+    display: block;
+    height: 39px;
+    line-height: 39px;
+    margin: 5px 15px;
+    padding: 0 0 0 10px;
+    background: rgba(255, 255, 255, 0.2);
+    opacity: 0.6;
+}
+#keyboard .kb-info .kb-info-button:hover {
+    opacity: 1;
+}
+#keyboard .kb-info .kb-info-button .kb-icon {
+    padding: 0 10px;
+    background: transparent no-repeat center center;
+    margin-right: 10px;
+}
+#keyboard ul.kb-keys {
+    margin: 0 160px 0 0;
+    padding: 10px;
+    list-style: none;
+    /*white-space-collapse: discard;*/
+    overflow: hidden;
+}
+#keyboard ul.kb-keys li {
+    float: left;
+    vertical-align: top;
+    width: 20%; /*10%;*/
+    text-align: center;
+    margin: 0;
+    font-size: 26px;
+}
+#keyboard ul.kb-keys li.kb-key-clearfix {
+    clear: left;
+}
+#keyboard ul.kb-keys li.kb-cells-2 {
+    width: 40%; /*20%;*/
+}
+#keyboard ul.kb-keys li.kb-cells-3 {
+    width: 60%; /*30%;*/
+}
+#keyboard ul.kb-keys li.kb-cells-4 {
+    width: 80%; /*40%;*/
+}
+#keyboard ul.kb-keys li .kb-key-wrap {
+    display: block;
+    height: 40px;
+    line-height: 40px;
+    overflow: visible;
+    padding: 0;
+    margin: 0;
+    border: 0 solid transparent;
+}
+#keyboard ul.kb-keys li .kb-key-wrap .kb-key-inner {
+    display: inline-block;
+    width: 100%;
+    height: 40px;
+    border: 1px solid #eee;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+    /*background-image: linear-gradient(top, rgb(225,225,225) 29%, rgb(213,213,213) 100%);*/
+    background: #dfe0e2 -webkit-gradient(
+            linear,
+            left top,
+            left bottom,
+            color-stop(0.29, rgb(225, 225, 225)),
+            color-stop(1, rgb(213, 213, 213))
+    );
+}
+#keyboard ul.kb-keys li.kb-focus .kb-key-wrap{
+    /*margin: 1px -1px -1px 1px;
+    height: 46px;
+    line-height: 46px;
+    position: relative;
+    top: -5px;
+    left: -1px;*/
+}
+#keyboard ul.kb-keys li.kb-focus .kb-key-wrap .kb-key-inner{
+    /*height: 46px;*/
+    font-size: 28px;
+	border: none;
+    /*background-image: linear-gradient(top, rgb(127,191,228) 29%, rgb(131,185,217) 100%);*/
+    background: #84bede -webkit-gradient(
+            linear,
+            left top,
+            left bottom,
+            color-stop(0.29, rgb(127, 191, 228)),
+            color-stop(1, rgb(131, 185, 217))
+    );
+    /*-webkit-box-shadow: inset 0 0 10px 0 #1271a7;
+    box-shadow: inset 0 0 10px 0 #1271a7;*/
+}
+#keyboard ul.kb-keys li.kb-highlight .kb-key-wrap .kb-key-inner{
+    /*border: 2px solid #fff !important;
+    height: 38px;
+    line-height: 38px;
+    text-indent: -2px;*/
+}
+#keyboard ul.kb-keys li.kb-focus.kb-highlight .kb-key-wrap {
+/*    margin: 0 -1px;
+    line-height: 48px;*/
+}
+#keyboard ul.kb-keys li.kb-focus.kb-highlight .kb-key-wrap .kb-key-inner {
+    text-indent: -2px !important;
+}
+#keyboard.kb-glowing ul.kb-keys li {
+    opacity: 0.2;
+}
+#keyboard ul.kb-keys li.kb-glow {
+    opacity: 1;
+}
+#keyboard ul.kb-keys li.kb-active .kb-key-wrap .kb-key-inner{
+    /*border: 2px solid #1a89c8 !important;
+    height: 38px;
+    line-height: 38px;*/
+    text-indent: -2px;
+}
+#keyboard ul.kb-keys li.kb-pressed .kb-key-wrap {
+    height: 40px;
+    line-height: 42px;
+    font-size: 30px;
+}
+#keyboard ul.kb-keys li.kb-pressed .kb-key-wrap .kb-key-inner {
+    height: 40px;
+    text-indent: 2px;
+}
+
+#keyboard .kb-icon {
+    background: transparent no-repeat center center;
+    padding: 0 17px;
+}
+#keyboard ul.kb-keys li.kb-focus .kb-icon{
+    background-position: center center;
+}
+#keyboard .kb-icon-space {
+    background-image: url('../img/keyboard/space.png') !important;
+}
+#keyboard .kb-icon-shift {
+    background-image: url('../img/keyboard/shift.png') !important;
+}
+#keyboard .kb-icon-backspace {
+    background-image: url('../img/keyboard/backspace.png') !important;
+}
+#keyboard .kb-icon-left {
+    background-image: url('../img/keyboard/left.png') !important;
+}
+#keyboard .kb-icon-right {
+    background-image: url('../img/keyboard/right.png') !important;
+}
+#keyboard .kb-icon-return {
+    background-image: url('../img/keyboard/return.png') !important;
+}
+#keyboard.kb-shift ul.kb-keys {
+    text-transform: uppercase;
+}
+
+
+#wrap-kb #keyboard {
+	display: none;
+    position: absolute;
+    z-index: 10000;
+    right: 200px;
+    left: 200px;
+    top: 0;
+    bottom: 0;
+    background: rgba(80, 80, 80, 0.85);
+    border-top: 1px solid rgba(255, 255, 255, 0.4);
+    border-left: 1px solid rgba(255, 255, 255, 0.4);
+	color: white; /*#565d6a*/
+	text-shadow: none; /*0 1px 0 #fff*/
+	-webkit-box-shadow: 2px 2px 6px 0 #000;
+    box-shadow: 2px 2px 6px 0 #000;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	width:250px;
+	height:424px;
+}
+
+#wrap-kb.s2011 #keyboard {
+	display: none;
+    position: absolute;
+    z-index: 10000;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: url('../img/keyboard/2011/keyboardBg.png') no-repeat top left;
+    border-top: none;
+    border-left: none;
+	color: white; /*#565d6a*/
+	text-shadow: none; /*0 1px 0 #fff*/
+	-webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
+
+#wrap-kb #keyboard ul.kb-keys {
+    margin: 0 0 0 0;
+	padding: 12px;
+	list-style: none;
+	/*white-space-collapse: discard;*/
+	overflow: hidden;
+	width: 225px;
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys {
+    margin: 0 0 0 0;
+	padding: 19px;
+	list-style: none;
+	/*white-space-collapse: discard;*/
+	overflow: hidden;
+	width: 225px;
+}
+
+#wrap-kb #keyboard .kb-info {
+    display: none;
+}
+#wrap-kb #keyboard ul.kb-keys li {
+    float: left;
+    vertical-align: top;
+    width: 45px; /*20%;*/ /*10%;*/
+    text-align: center;
+    margin: 0;
+    font-size: 26px;
+}
+#wrap-kb #keyboard ul.kb-keys li.kb-CharOff {
+	color: #555555;
+}
+#wrap-kb #keyboard ul.kb-keys li.kb-cells-2 {
+    width: 90px /*40%;*/ /*20%;*/
+}
+#wrap-kb #keyboard ul.kb-keys li.kb-cells-3 {
+    width: 135px /*60%;*/ /*30%;*/
+}
+#wrap-kb #keyboard ul.kb-keys li.kb-cells-4 {
+    width: 180px; /*80%;*/ /*40%;*/
+}
+#wrap-kb #keyboard ul.kb-keys li.kb-cells-2.kb-cells-2_5 {
+    width: 112px /*40%;*/ /*20%;*/
+}
+
+#wrap-kb #keyboard ul.kb-keys li.kb-cells-3.kb-cells-2_5 {
+    width: 113px /*60%;*/ /*30%;*/
+}
+
+#wrap-kb #keyboard ul.kb-keys li .kb-key-wrap {
+    display: block;
+    height: 40px;
+    line-height: 40px;
+    overflow: visible;
+    padding: 0;
+    margin: 0;
+    border: 0 solid transparent;
+}
+
+#wrap-kb #keyboard ul.kb-keys li .kb-key-wrap .kb-key-inner {
+    display: inline-block;
+    width: 100%;
+    height: 40px;
+	background: #2c2c2c;
+    border: 0 solid #eee;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+    /*background-image: linear-gradient(top, rgb(44,44,44) 29%, rgb(26,26,26) 100%);*/
+
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li .kb-key-wrap .kb-key-inner {
+    display: inline-block;
+    width: 100%;
+    height: 40px;
+    border-width: 0;
+    background: url('../img/keyboard/2011/nTopKeyBg.png') no-repeat top left;
+}
+
+#wrap-kb #keyboard ul.kb-keys li.kb-focus .kb-key-wrap .kb-key-inner {
+
+	background:#042c72;
+    font-size: 28px;
+    border: 0 solid #eee;
+	border-top: 1px solid rgb(4,44,114);
+	border-left: 1px solid rgba(255, 255, 255, 0.25);
+    /*background-image: linear-gradient(top, rgb(5,58,145) 29%, rgb(4,44,114) 100%);*/
+
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li.kb-focus .kb-key-wrap .kb-key-inner {
+    font-size: 28px;
+    border-width: 0;
+    background: url('../img/keyboard/2011/nTopKeyBg-focus.png') no-repeat top left;
+}
+
+#wrap-kb #keyboard ul.kb-keys li.kb-CharOff.kb-focus .kb-key-wrap .kb-key-inner {
+	display: inline-block;
+    width: 100%;
+    height: 40px;
+    font-size: 26px;
+    background: #1a1a1a;
+    border: 0 solid #eee;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+    /*background-image: linear-gradient(top, rgb(44,44,44) 29%, rgb(26,26,26) 100%);*/
+    
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li.kb-CharOff.kb-focus .kb-key-wrap .kb-key-inner {
+	display: inline-block;
+    width: 100%;
+    height: 40px;
+    border-width: 0;
+    background: url('../img/keyboard/2011/nTopKeyBg.png') no-repeat top left;
+}
+
+#wrap-kb #keyboard ul.kb-keys li .kb-key-wrap .kb-key-inner.kb-inner-top-left-radius {
+	-webkit-border-top-left-radius: 5px;
+	-moz-border-radius-topleft: 5px;
+	border-top-left-radius: 5px;
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li .kb-key-wrap .kb-key-inner.kb-inner-top-left-radius {
+	background: url('../img/keyboard/2011/topLeftKeyBg.png') no-repeat top left;
+	-webkit-border-top-left-radius: 0;
+	-moz-border-radius-topleft: 0;
+	border-top-left-radius: 0;
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li.kb-focus .kb-key-wrap .kb-key-inner.kb-inner-top-left-radius {
+	background: url('../img/keyboard/2011/topLeftKeyBg-focus.png') no-repeat top left;
+	-webkit-border-top-left-radius: 0;
+	-moz-border-radius-topleft: 0;
+	border-top-left-radius: 0;
+}
+
+#wrap-kb #keyboard ul.kb-keys li .kb-key-wrap .kb-key-inner.kb-inner-top-right-radius {
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-radius-topright: 5px;
+	border-top-right-radius: 5px;
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li .kb-key-wrap .kb-key-inner.kb-inner-top-right-radius {
+	background: url('../img/keyboard/2011/topRightKeyBg.png') no-repeat top left;
+	-webkit-border-top-right-radius: 0;
+	-moz-border-radius-topright: 0;
+	border-top-right-radius: 0;
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li.kb-focus .kb-key-wrap .kb-key-inner.kb-inner-top-right-radius {
+	background: url('../img/keyboard/2011/topRightKeyBg-focus.png') no-repeat top left;
+	-webkit-border-top-right-radius: 0;
+	-moz-border-radius-topright: 0;
+	border-top-right-radius: 0;
+}
+
+#wrap-kb #keyboard ul.kb-keys li .kb-key-wrap .kb-key-inner.kb-inner-bottom-left-radius {
+	-webkit-border-bottom-left-radius: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li .kb-key-wrap .kb-key-inner.kb-inner-bottom-left-radius {
+	background: url('../img/keyboard/2011/bottomLeft2Cells.png') no-repeat top left;
+	-webkit-border-bottom-left-radius: 0;
+	-moz-border-radius-bottomleft: 0;
+	border-bottom-left-radius: 0;
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li.kb-focus .kb-key-wrap .kb-key-inner.kb-inner-bottom-left-radius {
+	background: url('../img/keyboard/2011/bottomLeft2Cells-focus.png') no-repeat top left;
+	-webkit-border-bottom-left-radius: 0;
+	-moz-border-radius-bottomleft: 0;
+	border-bottom-left-radius: 0;
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li.kb-cells-2_5 .kb-key-wrap .kb-key-inner.kb-inner-bottom-left-radius {
+	background: url('../img/keyboard/2011/bottomLeft2_5Cells.png') no-repeat top left;
+	-webkit-border-bottom-left-radius: 0;
+	-moz-border-radius-bottomleft: 0;
+	border-bottom-left-radius: 0;
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li.kb-cells-2_5.kb-focus .kb-key-wrap .kb-key-inner.kb-inner-bottom-left-radius {
+	background: url('../img/keyboard/2011/bottomLeft2_5Cells-focus.png') no-repeat top left;
+	-webkit-border-bottom-left-radius: 0;
+	-moz-border-radius-bottomleft: 0;
+	border-bottom-left-radius: 0;
+}
+
+#wrap-kb #keyboard ul.kb-keys li .kb-key-wrap .kb-key-inner.kb-inner-bottom-right-radius {
+	-webkit-border-bottom-right-radius: 5px;
+	-moz-border-radius-bottomright: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li .kb-key-wrap .kb-key-inner.kb-inner-bottom-right-radius {
+	background: url('../img/keyboard/2011/bottomRight2Cells.png') no-repeat top left;
+	-webkit-border-bottom-right-radius: 0;
+	-moz-border-radius-bottomright: 0;
+	border-bottom-right-radius: 0;
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li.kb-focus .kb-key-wrap .kb-key-inner.kb-inner-bottom-right-radius {
+	background: url('../img/keyboard/2011/bottomRight2Cells-focus.png') no-repeat top left;
+	-webkit-border-bottom-right-radius: 0;
+	-moz-border-radius-bottomright: 0;
+	border-bottom-right-radius: 0;
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li.kb-cells-2_5 .kb-key-wrap .kb-key-inner.kb-inner-bottom-right-radius {
+	background: url('../img/keyboard/2011/bottomRight2_5Cells.png') no-repeat top left;
+	-webkit-border-bottom-right-radius: 0;
+	-moz-border-radius-bottomright: 0;
+	border-bottom-right-radius: 0;
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li.kb-cells-2_5.kb-focus .kb-key-wrap .kb-key-inner.kb-inner-bottom-right-radius {
+	background: url('../img/keyboard/2011/bottomRight2_5Cells-focus.png') no-repeat top left;
+	-webkit-border-bottom-right-radius: 0;
+	-moz-border-radius-bottomright: 0;
+	border-bottom-right-radius: 0;
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li .kb-key-wrap .kb-key-inner.kb-inner-3Cells {
+	background: url('../img/keyboard/2011/n3Cells.png') no-repeat top left;
+}
+
+#wrap-kb.s2011 #keyboard ul.kb-keys li.kb-focus .kb-key-wrap .kb-key-inner.kb-inner-3Cells {
+	background: url('../img/keyboard/2011/n3Cells-focus.png') no-repeat top left;
+}
+
+
+#wrap-kb #keyboard .kb-icon-space {
+   	background-image: url('../img/keyboard/space_w.png') !important;
+}
+#wrap-kb #keyboard .kb-icon-shift {
+    background-image: url('../img/keyboard/shift_w.png') !important;
+}
+#wrap-kb #keyboard .kb-icon-backspace {
+    background-image: url('../img/keyboard/backspace_w.png') !important;
+}
+#wrap-kb #keyboard .kb-icon-left {
+    background-image: url('../img/keyboard/left_w.png') !important;
+}
+#wrap-kb #keyboard .kb-icon-right {
+    background-image: url('../img/keyboard/right_w.png') !important;
+}
+#wrap-kb #keyboard .kb-icon-return {
+    background-image: url('../img/keyboard/return_w.png') !important;
+}
+#wrap-kb #keyboard .EN .kb-icon-done {
+    background-image: url('../img/keyboard/done-en_w.png') !important;
+}
+#wrap-kb #keyboard .ES .kb-icon-done {
+    background-image: url('../img/keyboard/done-es_w.png') !important;
+}
+#wrap-kb #keyboard .FR .kb-icon-done {
+    background-image: url('../img/keyboard/done-fr_w.png') !important;
+}
+#wrap-kb #keyboard .kb-icon-ok {
+    background-image: url('../img/keyboard/ok_w.png') !important;
+}
+#wrap-kb #keyboard .kb-icon-abc {
+    background-image: url('../img/keyboard/abc_w.png') !important;
+}
+#wrap-kb #keyboard .kb-icon-cha {
+    background-image: url('../img/keyboard/cha_w.png') !important;
+}

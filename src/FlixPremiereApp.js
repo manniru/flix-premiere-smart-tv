@@ -1,0 +1,4 @@
+var FlixPremiereApp=(function(){return Class.create({_init_:function(){this.VC=ViewControllerManager;this.WM=WidgetManager;},handleKey:function(keyCode){var el='#'+TVA.onFocus;if(el!=='#'){$(el).trigger('tvaKey',[keyCode]);}},_initViewControllers:function(){TVA.log('Loading App...');var vc;for(var i=0;i<VCRegister.length;i++){vc=VCRegister[i];this.VC.create(vc.vcName,{template:vc.template,events:vc.events});}
+this.WM.init();for(var j=0;j<WidgetRegister.widgets.length;j++){vc=WidgetRegister.widgets[j];this.WM.create(vc);}
+TVA.log('Done');},Go:function(){this._initViewControllers();if(config.hasVideo){VideoController.init();}
+var rootVC=this.VC.find('Root');rootVC.onLoad();}});})();

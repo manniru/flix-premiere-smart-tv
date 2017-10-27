@@ -1,0 +1,38 @@
+/*SignInMenu*/
+
+#SignInMenu_Buttons {
+    position: absolute;
+    top: 287px;
+    left: 514px;
+    width: 253px;
+    height: 135px;
+    color: #FFFFFF;
+}
+
+#SignInMenu_sign_btn, #SignInMenu_register_btn {
+    background-color: #333333;
+    height: 60px;
+    width: inherit;
+    line-height: 60px;
+    font-family: OpenSansRegular !important;
+    font-size: 24px !important;
+    text-align: Center;
+}
+
+#SignInMenu_register_btn {
+    margin-top: 15px !important;
+}
+
+#SignInMenu_sign_btn.focus, #SignInMenu_register_btn.focus {
+    background-color: #ae1927;
+}
+
+#SignInMenu_description {
+    position: absolute;
+    top: 575px;
+    left: 270px;
+    font-family: OpenSansRegular !important;
+    font-size: 24px !important;
+    color: #FEFEFE;
+    text-align: center;
+}

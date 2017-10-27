@@ -1,0 +1,200 @@
+/*profile*/
+
+#Profile, #SignInContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1280px;
+    height: 720px;
+    /* background-color: #0a0a0a; */
+}
+
+#profileTitle {
+    position: absolute;
+    top: 38px;
+    left: 76px;
+    font-family: OpenSansSemibold !important;
+    font-size: 28px !important;
+    color: #999999;
+    line-height: 0.86;
+    text-align: left;
+    font-weight: 600;
+    z-index: 1;
+    width: 640px;
+    height: 62px;
+    /* background: url(assets/title_shadow.png) no-repeat; */
+}
+
+#profileTitle {}
+
+#profileInfos {
+    position: absolute;
+    top: 51px;
+    left: 391px;
+    width: 500px;
+
+}
+
+#profileInfos > div {
+    width: 100%;
+    height: 50px;
+}
+
+#profileInfos > tbody > tr > td:last-child, #profileInfos > div > p:last-child {
+    text-align: right;
+    /* padding-bottom: 10px; */
+    color: #999999;
+    font-family: OpenSansRegular !important;
+    font-size: 24px !important;
+    overflow: hidden;
+    right: 0px;
+}
+
+#profileInfos > div > p {position: absolute;}
+
+#profileClientEmail,#profileClientName {
+    max-width: 420px;
+}
+
+#profileInfos > tbody > tr > td:first-child, #profileInfos > div > p:first-child {
+    color: #FFFFFF;
+    /* padding-bottom: 10px; */
+    font-family: OpenSansRegular !important;
+    font-size: 24px !important;
+}
+
+#profileButtons {
+    position: absolute;
+    left: 377px;
+    top: 105px;
+    width: 526px;
+    height: 510px;
+    background: transparent;
+    text-align: center;
+}
+
+#btn_parental_controls  {
+    margin-top: 15px;
+}
+
+#btn_help, #btn_terms_conditions, #btn_sign_out, #btn_choose_language, #btn_register, #btn_about {
+    margin-top: 15px !important;
+}
+
+.profileButtonsDef {
+    width: inherit;
+    height: 60px;
+    background-color: #333333;
+    color: #ffffff;
+    font-family: OpenSansRegular !important;
+    font-size: 24px !important;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 60px;
+}
+
+.profileButtonsDef.focus {
+    background-color: #ae1927;
+}
+
+#profileBackOption {
+    position: absolute;
+    left: 1097px;
+    top: 633px;
+    height: 30px;
+    width: 32px;
+}
+
+#Profile .termsSupportScreen {
+    display: none;
+}
+
+#Profile .content {
+    width: 981px;
+    height: 600px;
+    position: absolute;
+    /*top: 120px;*/
+    top: 0;
+    left: 76px;
+    right: 0;
+}
+
+
+#Profile #TextScroller {
+    position: absolute;
+    width: 981px;
+    /*height: 600px;*/
+    height: 720px;
+}
+
+#Profile .content #textField {
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+    font-size: 24px;
+    line-height: 22px;
+    font-family: OpenSansRegular;
+    text-align: justify;
+    left: 0px;
+    width: 981px;
+    /*height: 600px;*/
+    height: 720px;
+    color: #FFFFFF;
+}
+
+#Profile .content #textField > ul, #Profile .content #textField > ol {
+  padding: 0 0 0 40px;
+}
+
+
+
+#Profile #scroll {
+    top: 20px;
+    position: absolute;
+    height: 100%;
+}
+
+
+
+#Profile #arrow_scroll_up {
+    position: absolute;
+    left: 1031px;
+    top: 80px;
+    background-image: url('assets/pointer_arrows/bttn_pointer_up.png');
+    width: 80px;
+    height: 47px;
+}
+
+#Profile #arrow_scroll_up.focus {
+    background-image: url('assets/pointer_arrows/bttn_pointer_up_focus.png');
+}
+
+#Profile #arrow_scroll_down.focus {
+    background-image: url('assets/pointer_arrows/bttn_pointer_down_focus.png');
+}
+
+#Profile #arrow_scroll_down {
+    position: absolute;
+    left: 1031px;
+    top: 170px;
+    background-image: url('assets/pointer_arrows/bttn_pointer_down.png');
+    width: 80px;
+    height: 47px;
+}
+
+#bottomMask{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url('assets/fade_bottom.png') no-repeat bottom;
+}
+
+#topMask{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+    background: url('assets/fade_top.png') no-repeat;
+}
+

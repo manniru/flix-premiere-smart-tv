@@ -1,0 +1,2 @@
+var Template=(function(){return Class.create({_init_:function(){this.Templates={};this.__folder="templates";this.__ext=".html";},load:function(name){if(this.Templates.hasOwnProperty(name)){return $(this.Templates[name]).clone();}
+var self=this;$.ajax({url:this.__folder+'/'+name+this.__ext,async:false,success:function(data){self.Templates[name]=$(data);},error:function(e){}});return self.Templates[name];}});})();

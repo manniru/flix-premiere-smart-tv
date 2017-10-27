@@ -1,0 +1,3 @@
+var Route=(function(){"use strict";var Route=function(){this._viewControllerManager=ViewControllerManager;this._routes={};};Route.prototype={addTarget:function(id,tmplt,ctrl,defID){$elp=ctrl;while(ctrl._extends_&&!ctrl._extends_.__tvavcid)
+$elp=$elp._extends_;if(!$elp._extends_){$elp._extends_=ViewController;ini=$elp._init_.toString();if(init.indexOf('_extends_.call(')==-1){}}
+Class.create(ctrl,tmplt);}};return new Route();})();

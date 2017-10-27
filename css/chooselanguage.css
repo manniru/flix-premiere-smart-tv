@@ -1,0 +1,51 @@
+/*chooseLanguage*/
+
+#chooseLanguageTitle {
+    position: absolute;
+    top: 38px;
+    width: 400px;
+    left: 80px;
+    font-family: OpenSansSemibold !important;
+    font-size: 28px !important;
+    color: #999999;
+    line-height: 0.86;
+    text-align: left;
+    font-weight: 600;
+}
+
+#languageButtons {
+    position: absolute;
+    left: 377px;
+    top: 290px;
+    width: 526px;
+    height: 140px;
+    background: transparent;
+    text-align: center;
+}
+
+
+.languageButtonsDef {
+    width: inherit;
+    height: 60px;
+    background-color: #333333 ;
+    color: #ffffff;
+    font-family: OpenSansRegular !important;
+    font-size: 24px !important;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 60px;
+}
+
+.languageButtonsDef.focus{
+    background-color: #ae1927;
+}
+
+.checkSignCL {
+    position: relative;
+    top: -40px;
+    left: 541px;
+    background: url('assets/check.png') no-repeat center;
+    width: 26px;
+    height: 21px;
+}

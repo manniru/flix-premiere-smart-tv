@@ -1,0 +1,1 @@
+var GA={sendTrackPage:function(page){TVA_GoogleAnalytics.sendTrackPage(page,{});},sendTrackEvent:function(category,action,label,value,interactive){TVA_GoogleAnalytics.sendTrackEvent(category,action,label,value,interactive,{});}};

@@ -1,0 +1,43 @@
+/*SignInHandler*/
+
+#SignInHandlerContainer {
+    width: 594px;
+    height: 420px;
+}
+
+#signInHandler_info {
+    position: absolute;
+    top: 52px;
+    left: 28px;
+    color: #FFFFFF;
+    font-family: OpenSansSemibold !important;
+    font-size: 24px !important;
+}
+
+#signInHandler_error {
+    position: absolute;
+    top: 91px;
+    left: 28px;
+    width: 503px;
+    color: #ae1927;
+    font-family: OpenSansSemibold !important;
+    font-size: 26px !important;
+}
+
+#signInHandler_btn {
+    position: absolute;
+    top: 142px;
+    left: 28px;
+    width: 253px;
+    height: 60px;
+    color: #FFFFFF;
+    font-family: OpenSansRegular !important;
+    font-size: 24px !important;
+    text-align: center;
+    background-color: #1e1e1e;
+    line-height: 60px;
+}
+
+#signInHandler_btn.focus {
+    background-color: #ae1927;
+}

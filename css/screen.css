@@ -1,0 +1,438 @@
+/*Screen*/
+
+#Screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1280px;
+    height: 720px;
+}
+
+#screens {
+    position: absolute;
+    top: 0;
+    left: 334px;
+}
+
+#Screen .wholeStar, #categoriesList .wholeStar, .wholeStar {
+    background-image: url(assets/full_star.png);
+    width: 42px;
+    height: 26px;
+    position: absolute;
+}
+
+#categoriesList #home_red_carpet .wholeStar,
+#Screen #red_carpet_screen .wholeStar {
+    background-image: url(assets/full_star.png);
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    background-size: 15px 15px;
+}
+
+#Screen .halfStar, #categoriesList .halfStar, .halfStar {
+    background-image: url(assets/half_star.png);
+    width: 42px;
+    height: 26px;
+    position: absolute;
+}
+
+#categoriesList #home_red_carpet .halfStar,
+#Screen #red_carpet_screen .halfStar {
+    background-image: url(assets/half_star.png);
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    background-size: 15px 15px;
+}
+
+#Screen .rating, #categoriesList .rating {
+    /* width: 371px; */
+    height: 30px;
+    top: 0;
+    right: -20px;
+    position: absolute;
+}
+
+#categoriesList #home_red_carpet .rating,
+#Screen #red_carpet_screen .rating {
+    top: 9px;
+}
+
+#categories .gridElement.active .placeholder, #Screen .gridElement.active .placeholder {
+    width: 290px;
+    height: 370px;
+    left: -39px;
+    top: -48px;
+    background-size: 261px 370px;
+    background: url(assets/focus/fcs_home_standard.png) no-repeat;
+    position: absolute;
+}
+
+#Screen #red_carpet_screen .gridElement.active .placeholder {
+    width: 1192px;
+    height: 480px;
+    left: -35px;
+    top: -29px;
+    background-size: 1192px 480px;
+    background: url(assets/focus/fcs_red_carpet.png) no-repeat;
+    position: absolute;
+}
+
+#ScreenContent .comingSoonDate {
+    color: rgba(255, 255, 255, 0.25);
+    bottom: 40px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+}
+
+#ScreenContent .active .comingSoonDate {
+    color: rgba(255, 255, 255, 1);
+    bottom: 20px;
+    position: absolute;
+    text-align: center;
+    width: 215px;
+    font-size: 20px;
+    left: -16px;
+}
+
+#categoriesList #featuredCounter {
+    position: relative;
+    /* left: 640px; */
+    top: 280px;
+    /* max-width: 500px; */
+    height: 40px;
+    margin: 0 auto;
+}
+
+#featuredCounter .featuredCounterBlock {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    display: inline-block;
+    margin: 3px;
+}
+
+#featuredCounter .featuredCounterBlock.active {
+    background-color: #7d7a7a;
+}
+
+#featuredCounter.active .featuredCounterBlock.active {
+    background-color: #ae1927;
+}
+
+#ScreenContent .Grid .content p {
+    position: absolute;
+    width: 183px;
+    overflow: hidden;
+}
+
+#ScreenContent .Grid .content p:nth-child(2) {
+    top: 20px;
+}
+
+.movieTitleContainer p:nth-child(1) {
+    height: 31px;
+}
+
+#categoriesList .Grid .content .homeMovieTitle, #categoriesList .Grid .content .coverartMovieTitle {
+    position: absolute;
+    top: 0;
+    color: rgba(255, 255, 255, 0.25);
+    width: 183px;
+    text-align: center;
+    overflow: hidden;
+    height: 28px;
+}
+
+#categoriesList #home_upcoming.Grid .content .movieTitleContainer p:nth-child(2), #home_upcoming.Grid .content .movieTitleContainer p:nth-child(2) #upcoming_screen {
+    top: 20px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+}
+
+p.coverartMovieTitle {
+}
+
+#ScreenContent .Grid .content .premieredate p {
+    position: relative;
+    top: 0;
+    left: 0;
+    color: rgba(255, 255, 255, 1);
+    width: 165px;
+    height: 1em;
+    overflow: visible;
+    text-align: center;
+}
+
+#ScreenContent .Grid .active .content p {
+    /* bottom: 55px; */
+    left: 18px;
+    width: 183px;
+    /* color: rgba(255, 255, 255,1); */
+    font-size: 25px;
+}
+
+#ScreenContent .Grid .content .premieredate p:nth-child(2), #categoriesList .Grid .content .premieredate p:nth-child(2) {
+    font-size: 30px;
+    width: 540px;
+}
+
+#ScreenContent .Grid .content .premieredate p:nth-child(1), #categoriesList .Grid .content .premieredate p:nth-child(1) {
+    font-size: 19px;
+}
+
+#ScreenContent #red_carpet_screen .premieredate p {
+    text-align: left;
+    left: 0;
+}
+
+#categoriesList .Grid .active .content .homeMovieTitle, #categoriesList .Grid .active .content .coverartMovieTitle {
+    top: 0;
+    font-size: 25px;
+    color: rgba(255, 255, 255, 1);
+    height: 32px;
+}
+
+#ScreenContent .Grid .thmb {
+    position: absolute;
+    width: 183px;
+    height: 275px;
+    left: 0;
+    background-size: contain;
+}
+
+#ScreenContent #red_carpet_screen.Grid .thmb {
+    width: 1122px;
+    height: 424px;
+}
+
+#ScreenContent .Grid .active .thmb {
+    /* box-shadow: 0 0 14px 2px #aaa; */
+    /*width: 183px;*/
+    /*height: 275px;*/
+    left: -16px;
+    width: 216px;
+    height: 324px;
+    top: -25px;
+}
+
+#ScreenContent #red_carpet_screen .active .thmb {
+    /* box-shadow: 0 0 14px 2px #aaa; */
+    left: -12px;
+    top: -6px;
+    width: 1148px;
+    height: 434px;
+}
+
+#ScreenContent #red_carpet_screen .Grid .active .thmb {
+    /* box-shadow: 0 0 14px 2px #aaa; */
+    /* width: 183px; */
+    /* height: 275px; */
+    left: 1px;
+    width: 216px;
+    height: 324px;
+    top: -25px;
+}
+
+#Screen #title {
+    color: #999999;
+    /* top: 38px; */
+    /* left: 80px; */
+    padding: 38px 0 0 80px;
+    position: absolute;
+    font-family: OpenSansSemibold, sans-serif !important;
+    font-size: 28px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 0.86;
+    text-align: left;
+    background: url(assets/title_shadow.png) no-repeat;
+    width: 640px;
+    height: 104px;
+    pointer-events: none;
+}
+
+.arrow.end {
+    opacity: 0.3;
+}
+
+#myMoviesLoggedOut {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+#myMoviesLoggedOut .btn.focus {
+    background: #ae1927;
+}
+
+#myMoviesLoggedOut #message {
+    position: absolute;
+    top: 570px;
+    /* left: 380px; */
+    width: 100%;
+    /* height: 538px; */
+    color: #fff;
+    text-align: center;
+    font-size: 25px;
+}
+
+#myMoviesLoggedOut .btn {
+    position: absolute;
+    width: 257px;
+    height: 50px;
+    color: #fff;
+    text-align: center;
+    background: #333;
+    font-size: 30px;
+    padding: 10px 0 0 0;
+    left: 514px;
+}
+
+#noMovieData {
+    width: 800px;
+    height: 65px;
+    font-family: OpenSansRegular, sans-serif;
+    font-size: 24px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.67;
+    text-align: left;
+    color: #ececec;
+    top: 90px;
+    left: 80px;
+    position: absolute;
+}
+
+#myMoviesList .Left_Arrow {
+    left: -54px !important;
+}
+
+#red_carpet_screen .clip {
+    position: absolute;
+    /* top: -10px; */
+    /* left: -10px; */
+    width: 1161px;
+    height: 600px;
+    /* overflow: hidden; */
+}
+
+#red_carpet_screen .placeholderRedCarpet .movieDescription {
+    top: 227px;
+    font-size: 15px;
+    position: absolute;
+}
+
+#red_carpet_screen .placeholderRedCarpet .airingInfo {
+    top: 190px;
+    position: absolute;
+}
+
+#red_carpet_screen .placeholderRedCarpet .movieTitle {
+    top: 145px;
+    font-size: 23px;
+    /* width: 327px; */
+    height: 30px;
+    position: absolute;
+    font-family: OpenSansSemibold, sans-serif;
+}
+
+#red_carpet_screen .placeholderRedCarpet {
+    left: 300px;
+}
+
+.premieredate {
+    position: absolute;
+}
+
+#categoriesList #home_red_carpet .star:nth-child(1),
+#Screen #red_carpet_screen .star:nth-child(1) {
+}
+
+#categoriesList #home_red_carpet .star:nth-child(2),
+#Screen #red_carpet_screen .star:nth-child(2) {
+    left: 16px;
+}
+
+#categoriesList #home_red_carpet .star:nth-child(3),
+#Screen #red_carpet_screen .star:nth-child(3) {
+    left: 32px;
+}
+
+#categoriesList #home_red_carpet .star:nth-child(4),
+#Screen #red_carpet_screen .star:nth-child(4) {
+    left: 48px;
+}
+
+#categoriesList #home_red_carpet .star:nth-child(5),
+#Screen #red_carpet_screen .star:nth-child(5) {
+    left: 64px;
+}
+
+#categoriesList #home_red_carpet .star:nth-child(6),
+#Screen #red_carpet_screen .star:nth-child(6) {
+    left: 80px;
+}
+
+#categoriesList #home_red_carpet .noStar,
+#Screen #red_carpet_screen .noStar {
+    background-image: url(assets/empty_star.png);
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    background-size: 15px 15px;
+}
+
+#categoriesList .CarouselsList_Container div .title {
+    color: #fff;
+    left: -16px;
+    position: relative;
+    top: -13px;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+#categoriesList .Up_Arrow.Arrow.hoverButton {
+    top: 20px !important;
+}
+
+#categoriesList .CarouselsList_Container div div:not(.featuredCounterBlock) {
+    position: absolute;
+}
+
+#home_featured .active .placeholderCategory {
+    bottom: 12px !important;
+    left: 5px !important;
+    width: 99% !important;
+}
+
+#categoriesList .movieTitleContainer {
+    bottom: -37px;
+}
+
+#categoriesList .active .movieTitleContainer {
+    bottom: -69px;
+    left: 0;
+}
+
+#categoriesList .Left_Arrow {
+    left: -34px !important;
+}
+
+#categoriesList .Right_Arrow {
+    right: -26px !important;
+}
+
+#categoriesList .Down_Arrow.Arrow.hoverButton {
+    height: 176px;
+    background-position: bottom;
+    top: 502px !important;
+}

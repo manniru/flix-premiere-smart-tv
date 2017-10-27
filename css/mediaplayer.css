@@ -1,0 +1,143 @@
+/*mediaplayer*/
+
+#MediaPlayer {
+    background: #111111;
+    position: absolute;
+    width: 1280px;
+    height: 720px;
+}
+
+#MediaPlayerControls {
+    position: absolute;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    width: 100%;
+}
+
+#MediaPlayer #MediaPlayerControls {
+    height: 364px;
+}
+
+#MediaPlayerControls .thmb {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+
+#MediaPlayer #previewThumbs div {
+    width: 100%;
+    height: 100%;
+    background: no-repeat center;
+}
+
+#MediaPlayerControls .active .thmb {
+    top: -10px;
+    left: -15px;
+    width: 314px;
+    height: 209px;
+}
+
+#MediaPlayer #playerFooter {
+    position: relative;
+    top: 200px;
+}
+
+#MediaPlayer #progressBar {
+    top: -205px;
+    width: 1280px;
+}
+
+#MediaPlayer #indexCounter {
+    color: #fff;
+    top: 81px;
+    left: 80px;
+    font-size: 20px;
+    font-family: OpenSans, sans-serif;
+}
+
+#MediaPlayer .rect {
+    position: absolute;
+    width: 6px;
+    height: 20px;
+    background-color: #fff;
+    pointer-events: none;
+    display: inline-block;
+}
+
+#MediaPlayer .pause .rect:nth-child(2) {
+    left: 10px;
+}
+
+#skipForward .rect {
+    left: 26px;
+}
+
+#skipBack .rect {
+    left: 8px;
+}
+
+#MediaPlayer .gridElement.active .placeholder, #Screen .gridElement.active .placeholder {
+    width: 345px;
+    height: 239px;
+    left: -30px;
+    top: -24px;
+    background-size: 345px 239px;
+    background: url(assets/focus/fcs_details.png) no-repeat;
+    position: absolute;
+}
+
+#MediaPlayer #back {
+    top: 69px;
+/*. gridElement p . selected width: 99 px;*/
+    height: 52px;
+    color: #ececec;
+    font-size: 18px;
+    font-weight: bold;
+    background: url(assets/backarrow.png) no-repeat;
+    padding: 4px 0 0 45px;
+    font-family: OpenSansRegular, sans-serif;
+    right: 95px;
+}
+
+#MediaPlayer #back.active {
+    background-image: url(assets/backarrow_focus.png);
+    color: #ae1927;
+}
+
+#skipForward, #skipBack, #errorMsg {
+    display: none;
+}
+
+#MediaPlayer #skipForward, #MediaPlayer #skipBack {
+    display: block;
+}
+
+#MediaPlayer #skipForward {
+    left: 681px;
+    background: url(assets/ic-nxt.png) no-repeat center;
+}
+
+#MediaPlayer #skipBack {
+    left: 547px;
+    background: url(assets/ic-pr.png) no-repeat center;
+}
+
+#MediaPlayer .playerFooter.btn {
+    background-color: #333;
+    top: 62px;
+    width: 52px;
+    height: 52px;
+}
+
+#media_player_thumbs_Left_Arrow {
+    left: 83px !important;
+}
+
+#media_player_thumbs_Right_Arrow {
+    left: 1117px;
+}
+
+#back {
+    position: absolute
+}

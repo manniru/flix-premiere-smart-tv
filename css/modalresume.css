@@ -1,0 +1,47 @@
+/*ModalResume*/
+
+#ModalResume {
+    top: 200px;
+    height: 300px;
+    color: #FFFFFF;
+}
+
+#resume_popup_description {
+    font-family: OpenSansSemibold;
+    font-size: 28px;
+    position: absolute;
+    top: 85px;
+    left: 478px;
+}
+
+#resume_popup_buttons {
+    position: absolute;
+    top: 195px;
+    left: 354px;
+    width: 573px;
+    height: 60px;
+    color: #ffffff;
+    text-align: center;
+    line-height: 60px;
+    font-family: OpenSansRegular;
+    font-size: 24px;
+}
+
+#resume_yes_btn {
+    width: 253px;
+    height: inherit;
+    background-color: #333333;
+}
+
+#resume_restart_btn.focus, #resume_yes_btn.focus {
+    background-color: #ae1927;
+}
+
+#resume_restart_btn {
+    width: 253px;
+    height: 60px;
+    position: absolute;
+    top: 0px;
+    left: 320px;
+    background-color: #333333;
+}

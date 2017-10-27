@@ -1,0 +1,81 @@
+/*Search*/
+
+#SearchTitle, #searchResult {
+    position: absolute;
+    top: -100px;
+    left: -680px;
+    font-family: OpenSansSemibold, sans-serif !important;
+    font-size: 28px !important;
+    color: #999999;
+    line-height: 0.86;
+    text-align: left;
+    font-weight: 600;
+    z-index: 1;
+    background: url(assets/title_shadow.png) no-repeat;
+    width: 587px;
+    height: 145px;
+    /* background-color: white; */
+    padding: 38px 0 0 80px;
+}
+
+#search_results {
+    font-family: OpenSansRegular, sans-serif !important;
+    font-size: 20px !important;
+}
+
+#search_results .thmb {
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#search_results .active .thmb {
+    top: -25px;
+    left: -18px;
+    width: 265px;
+    height: 324px;
+}
+
+#search_results.Grid .content .searchResultTitle {
+    position: absolute;
+    bottom: 72px;
+    color: rgba(255, 255, 255, 0.25);
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+    height: 26px;
+}
+
+#search_results.Grid .active .content .searchResultTitle {
+    bottom: 39px;
+    left: -10px;
+    width: 215px;
+    color: rgba(255, 255, 255, 1);
+    font-size: 25px;
+}
+
+#search_results .gridElement.active .placeholder {
+    width: 276px;
+    height: 373px;
+    left: -41px;
+    top: -48px;
+    background-size: 262px 370px;
+    background: url(assets/focus/fcs_home_standard.png) no-repeat;
+    position: absolute;
+}
+
+#searchSuggestions .gridElement > .content > p {
+    color: #999;
+    line-height: 60px;
+    font-family: OpenSansRegular, sans-serif !important;
+    font-size: 24px !important;
+    padding-left: 15px;
+}
+
+#searchSuggestions .gridElement.active > .content > p {
+    background-color: #ae1927;
+    color: #FFFFFF;
+}
+
+

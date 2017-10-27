@@ -1,0 +1,33 @@
+/*modalInformation*/
+
+#ModalInformation {
+    top: 200px;
+    height: 320px;
+    background: #1e1e1e;
+}
+
+#info_btn_close {
+    position: absolute;
+    left: 514px;
+    top: 206px;
+    background-color: #333333;
+    font-family: OpenSansRegular;
+    font-size:24px;
+    width: 253px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+}
+
+#popup_Title, #info_popup_Title {
+    top: 35px !important;
+    font-size: 28px !important;
+}
+
+#popup_Title, #popup_description, #info_popup_Title, #info_popup_description  {
+    text-align: center;
+    font-size: 24px;
+    top: 80px;
+    position: relative;
+    font-family: OpenSansSemibold;
+}

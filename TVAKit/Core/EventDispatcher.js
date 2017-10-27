@@ -1,0 +1,7 @@
+var EventDispatcher=(function(){var ED=Class.create({_init_:function(){this.mappings={};},subscribe:function(name,callback,eContext){if(this.mappings[name]===undefined){this.mappings[name]=[];}
+var eventBinder={callback:callback,context:eContext};this.mappings[name].push(eventBinder);return[name,eventBinder];},unsubscribe:function(endPoint){var e;if(endPoint instanceof Array){if(endPoint[0]instanceof Array){for(e in endPoint){if(endPoint.hasOwnProperty(e)){this._unsubscribe(endPoint[e]);}}}else{this._unsubscribe(endPoint);}}},_unsubscribe:function(endPoint){if(!endPoint instanceof Array){return;}
+if(!this.mappings.hasOwnProperty(endPoint[0])){return;}
+var eName=endPoint[0],eBinder=endPoint[1],event=this.mappings[eName],eLength=event.length;while(eLength--){if(event[eLength]===eBinder){event.splice(eLength,1);}}},publish:function(){if(arguments.length<1){return;}
+var args=Array.prototype.slice.call(arguments,0),event=this.mappings[args[0]],eLength,elm;if(event===undefined){return;}
+eLength=event.length;args.shift();while(eLength--){elm=event[eLength];if(elm.callback===undefined){event.splice(eLength,1);continue;}
+event[eLength].callback.apply((elm.context===undefined)?event[eLength]:elm.context,args);}}});return new ED();})();
